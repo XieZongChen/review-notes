@@ -180,8 +180,8 @@ sizes 语法：`sizes="[media query] [length], [media query] [length] ... "`
 - 行内元素有：a b span img input select strong；
 - 块级元素有：div ul ol li dl dt dd h1 h2 h3 h4 h5 h6 p；
 - 空元素，即没有内容的 HTML 元素。空元素是在开始标签中关闭的，也就是空元素没有闭合标签：
-  - 常见的有：<br>、<hr>、<img>、<input>、<link>、<meta>；
-  - 鲜见的有：<area>、<base>、<col>、<colgroup>、<command>、<embed>、<keygen>、<param>、<source>、<track>、<wbr>。
+  - 常见的有：`<br>、<hr>、<img>、<input>、<link>、<meta>`；
+  - 鲜见的有：`<area>、<base>、<col>、<colgroup>、<command>、<embed>、<keygen>、<param>、<source>、<track>、<wbr>`。
 
 ## 说一下 web worker
 
