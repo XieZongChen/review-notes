@@ -151,6 +151,100 @@ meta 标签由 name 和 content 属性定义，用来描述网页文档的属性
   - 纯表现的元素：basefont，big，center，font, s，strike，tt，u
   - 对可用性产生负面影响的元素：frame，frameset，noframes 
 
+## img 的 srcset 属性的作⽤
+
+srcset 属性用于设置不同屏幕密度下，img 自动加载的不同图片。
+
+```html
+// 屏幕密度为 1x 的情况下加载 image-128.png, 屏幕密度为 2x 时加载 image-256.png
+<img src="image-128.png" srcset="image-256.png 2x" />
+```
+
+按照上面的实现，不同的屏幕密度都要设置图片地址，假设目前的屏幕密度有 1x,2x,3x,4x 四种，如果每一个图片都设置 4 张图片，加载就会很慢。所以就有了新的 srcset 标准。代码如下：
+
+```html
+// 默认显示 128px, 如果视区宽度大于 360px, 则显示 340px
+<img src="image-128.png"
+     srcset="image-128.png 128w, image-256.png 256w, image-512.png 512w"
+     sizes="(max-width: 360px) 340px, 128px" />
+```
+
+其中 srcset 指定图片的地址和对应的图片质量。sizes 用来设置图片的尺寸零界点。对于 srcset 中的 w 单位，可以理解成图片质量。如果可视区域小于这个质量的值，就可以使用。浏览器会自动选择一个最小的可用图片。
+
+sizes 语法：`sizes="[media query] [length], [media query] [length] ... "`
+
+详情见 [响应式图片](https://developer.mozilla.org/zh-CN/docs/Learn/HTML/Multimedia_and_embedding/Responsive_images)
+
+## 行内元素有哪些？块级元素有哪些？ 空(void)元素有那些？
+
+- 行内元素有：a b span img input select strong；
+- 块级元素有：div ul ol li dl dt dd h1 h2 h3 h4 h5 h6 p；
+- 空元素，即没有内容的 HTML 元素。空元素是在开始标签中关闭的，也就是空元素没有闭合标签：
+  - 常见的有：<br>、<hr>、<img>、<input>、<link>、<meta>；
+  - 鲜见的有：<area>、<base>、<col>、<colgroup>、<command>、<embed>、<keygen>、<param>、<source>、<track>、<wbr>。
+
+## 说一下 web worker
+
+在 HTML 页面中，如果在执行脚本时，页面的状态是不可响应的，直到脚本执行完成后，页面才变成可响应。web worker 是运行在后台的 js，使用独立线程独立于主线程，使主线程（通常是 UI 线程）的运行不会被阻塞/放慢。主线程与 worker 线程间使用 postMessage 方法发送消息。这样在进行复杂操作的时候，就不会阻塞主线程了。不能直接在 worker 线程中操作 DOM 元素，或使用 window 对象中的某些方法和属性。worker 可以通过 XMLHttpRequest 来访问网络，但 XMLHttpRequest 的 responseXML 和 channel 属性始终返回 null。详情见 [Web Worker API](https://developer.mozilla.org/zh-CN/docs/Web/API/Web_Workers_API)
+
+如何创建 web worker：
+1. 检测浏览器对于 web worker 的支持性
+2. 创建 web worker 文件（js，回传函数等）
+3. 创建 web worker 对象
+
+## HTML5 的离线储存怎么使用，它的工作原理是什么
+
+离线存储是指：在用户没有与因特网连接时，可以正常访问站点或应用，在用户与因特网连接时，更新用户机器上的缓存文件。
+
+原理：
+- 早期的 html5 manifest 离线存储缓存技术：是基于一个新建的 .appcache 文件的缓存机制(不是存储技术)，通过这个文件上的解析清单离线存储资源，这些资源就会像 cookie 一样被存储了下来。之后当网络在处于离线状态下时，浏览器会通过被离线存储的数据进行页面展示。现在 html 的 manifest 已废弃，转而使用 link 的 manifest，接收一个 json 缓存目录，总体来说开发难度大，维护难度大，需要服务端配合。详情见 [Web app manifests](https://developer.mozilla.org/en-US/docs/Web/Manifest)
+- 灵巧方案：借助 Service Worker 和 cacheStorage 来实现，详情见 [借助Service Worker和cacheStorage缓存及离线开发](https://www.zhangxinxu.com/wordpress/2017/07/service-worker-cachestorage-offline-develop/)、[通过 Service workers 让 PWA 离线工作](https://developer.mozilla.org/zh-CN/docs/Web/Progressive_web_apps/Tutorials/js13kGames/Offline_Service_workers)、[前端离线缓存之 “ Service Worker ”](https://juejin.cn/post/6976553406890508295)
+
+![image](https://github.com/XieZongChen/review-notes/assets/46394163/2e990009-b6b3-46e9-a70e-04a811cf618a)
+
+![image](https://github.com/XieZongChen/review-notes/assets/46394163/d5a91fee-d835-4db2-b5ab-c1ac3ffe8fe2)
+
+![image](https://github.com/XieZongChen/review-notes/assets/46394163/c5805738-94f4-43f4-880d-745bab00fb08)
+
+## title 与 h1 的区别、b 与 strong 的区别、i 与 em 的区别？
+
+- strong 标签有语义，是起到加重语气的效果，strong 标签加强字符的语气都是通过粗体来实现的，搜索引擎更侧重 strong 标签。b 标签是没有语义的，只是一个简单加粗标签。b 标签之间的字符都设为粗体。
+- title 属性没有明确意义只表示是个标题。H1 则表示层次明确的标题，对页面信息的抓取有很大的影响
+- i 内容展示为斜体。em 表示强调的文本
+
+## iframe 有那些优点和缺点
+
+iframe 元素会创建包含另外一个文档的内联框架（即行内框架）。
+
+优点：
+- 用来加载速度较慢的内容（如广告）
+- 可以使脚本可以并行下载
+- 可以实现跨子域通信
+
+缺点：
+- iframe 会阻塞主页面的 onload 事件
+- 无法被一些搜索引擎索识别
+- 会产生很多页面，不容易管理
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
