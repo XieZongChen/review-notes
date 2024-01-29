@@ -55,7 +55,14 @@ meta 标签由 name 和 content 属性定义，用来描述网页文档的属性
   - initial-scale ：初始缩放比例
   - maximum-scale ：最大缩放比例
   - minimum-scale ：最小缩放比例
-  - user-scalable ：是否允许用户缩放(yes/no） 
+  - user-scalable ：是否允许用户缩放(yes/no）
+
+# HTML5 有哪些更新
+1. [语义化标签](#对-html-语义化的理解)
+2. 媒体标签
+   - [audio 音频](https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/audio) `<audio src='' controls autoplay loop='true'></audio>`，属性：controls-控制面板、autoplay-自动播放、loop=‘true’-循环播放
+   - [video 视频](https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/video) `<video src='' poster='imgs/aa.jpg' controls></video>`，属性：poster-封面、controls-控制面板、width-宽、height-高
+   - [source 标签](https://developer.mozilla.org/zh-CN/docs/Web/HTML/Element/source)，指定视频源，以适配不同浏览器所支持的视频格式
 
 
 
