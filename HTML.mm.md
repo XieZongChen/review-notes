@@ -1,4 +1,4 @@
-# html 复习
+# HTML 复习
 
 ![image](https://github.com/XieZongChen/review-notes/assets/46394163/4aaeee9f-9400-45ae-b1c0-618c322aadad)
 
