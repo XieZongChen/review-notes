@@ -200,11 +200,11 @@ sizes 语法：`sizes="[media query] [length], [media query] [length] ... "`
 - 早期的 html5 manifest 离线存储缓存技术：是基于一个新建的 .appcache 文件的缓存机制(不是存储技术)，通过这个文件上的解析清单离线存储资源，这些资源就会像 cookie 一样被存储了下来。之后当网络在处于离线状态下时，浏览器会通过被离线存储的数据进行页面展示。现在 html 的 manifest 已废弃，转而使用 link 的 manifest，接收一个 json 缓存目录，总体来说开发难度大，维护难度大，需要服务端配合。详情见 [Web app manifests](https://developer.mozilla.org/en-US/docs/Web/Manifest)
 - 灵巧方案：借助 Service Worker 和 cacheStorage 来实现，详情见 [借助Service Worker和cacheStorage缓存及离线开发](https://www.zhangxinxu.com/wordpress/2017/07/service-worker-cachestorage-offline-develop/)、[通过 Service workers 让 PWA 离线工作](https://developer.mozilla.org/zh-CN/docs/Web/Progressive_web_apps/Tutorials/js13kGames/Offline_Service_workers)、[前端离线缓存之 “ Service Worker ”](https://juejin.cn/post/6976553406890508295)
 
-![image](https://github.com/XieZongChen/review-notes/assets/46394163/2e990009-b6b3-46e9-a70e-04a811cf618a)
+<img src="https://github.com/XieZongChen/review-notes/assets/46394163/2e990009-b6b3-46e9-a70e-04a811cf618a" alt="image" style="zoom: 40%" />
 
-![image](https://github.com/XieZongChen/review-notes/assets/46394163/d5a91fee-d835-4db2-b5ab-c1ac3ffe8fe2)
+<img src="https://github.com/XieZongChen/review-notes/assets/46394163/d5a91fee-d835-4db2-b5ab-c1ac3ffe8fe2" alt="image" style="zoom: 40%" />
 
-![image](https://github.com/XieZongChen/review-notes/assets/46394163/c5805738-94f4-43f4-880d-745bab00fb08)
+<img src="https://github.com/XieZongChen/review-notes/assets/46394163/c5805738-94f4-43f4-880d-745bab00fb08" alt="image" style="zoom: 40%" />
 
 ## title 与 h1 的区别、b 与 strong 的区别、i 与 em 的区别？
 
