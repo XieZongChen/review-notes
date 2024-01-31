@@ -71,6 +71,100 @@
    - list-style：列表风格，包括 list-style-type、list-style-image 等
 5. 光标属性
    - cursor：光标显示为何种形态
+  
+## display 的属性值及其作用
+
+| 属性值 | 作用 |
+| ----- | --- |
+| none | 元素不显示，并且会从文档流中移除 |
+| block | 块类型。默认宽度为父元素宽度，可设置宽高，换行显示 |
+| inline | 行内元素类型。默认宽度为内容宽度，不可设置宽高，同行显示 |
+| inline-block | 默认宽度为内容宽度，可以设置宽高，同行显示 |
+| list-item | 像块类型元素一样显示，并添加样式列表标记 |
+| table | 此元素会作为块级表格来显示 |
+| inherit | 规定应该从父元素继承 display 属性的值 |
+
+## display 的 block、inline 和 inline-block 的区别
+
+1. block：会独占一行，多个元素会另起一行，可以设置 width、height、margin 和 padding 属性；
+2. inline：元素不会独占一行，设置 width、height 属性无效。但可以设置水平方向的 margin 和 padding 属性，不能设置垂直方向的 padding 和 margin；
+3. inline-block：将对象设置为 inline 对象，但对象的内容作为 block 对象呈现，之后的内联对象会被排列在同一行内。
+
+对于行内元素和块级元素，其特点如下：
+
+1. 行内元素
+   - 设置宽高无效；
+   - 可以设置水平方向的 margin 和 padding 属性，不能设置垂直方向的 padding 和 margin；
+   - 不会自动换行；
+2. 块级元素
+   - 可以设置宽高；
+   - 设置 margin 和 padding 都有效；
+   - 可以自动换行；
+   - 多个块状，默认排列从上到下。
+
+## 隐藏元素的方法有哪些
+
+- overflow:hidden：用来隐藏元素溢出部分，占据空间，无法响应点击事件。
+- display: none：渲染树不会包含该渲染对象，因此该元素不会在页面中占据位置，也不会响应绑定的监听事件。
+- visibility: hidden：元素在页面中仍占据空间，但是不会响应绑定的监听事件。
+- opacity: 0：将元素的透明度设置为 0，以此来实现元素的隐藏。元素在页面中仍然占据空间，并且能够响应元素绑定的监听事件。
+- position: absolute：通过使用绝对定位将元素移除可视区域内，以此来实现元素的隐藏。
+- z-index: 负值：来使其他元素遮盖住该元素，以此来实现隐藏。
+- clip/clip-path ：使用元素裁剪的方法来实现元素的隐藏，这种方法下，元素仍在页面中占据位置，但是不会响应绑定的监听事件。
+- transform: scale(0,0)：将元素缩放为 0，来实现元素的隐藏。这种方法下，元素仍在页面中占据位置，但是不会响应绑定的监听事件。
+
+## display:none 与 visibility:hidden 的区别
+
+这两个属性都是让元素隐藏，不可见。两者区别如下：
+
+1. 在渲染树中
+   - display:none 会让元素完全从渲染树中消失，渲染时不会占据任何空间；
+   - visibility:hidden 不会让元素从渲染树中消失，渲染的元素还会占据相应的空间，只是内容不可见。
+2. 是否是继承属性
+   - display:none 是非继承属性，子孙节点会随着父节点从渲染树消失，通过修改子孙节点的属性也无法显示；
+   - visibility:hidden 是继承属性，子孙节点消失是由于继承了 hidden，通过设置 visibility:visible 可以让子孙节点显示；
+3. 修改常规文档流中元素的 display 通常会造成文档的重排，但是修改 visibility 属性只会造成本元素的重绘；
+4. 如果使用读屏器，设置为 display:none 的内容不会被读取，设置为 visibility:hidden 的内容会被读取。
+
+## link 和 @import 的区别
+
+两者都是外部引用 CSS 的方式，它们的区别如下：
+- link 是 XHTML 标签，除了加载 CSS 外，还可以定义 RSS 等其他事务；@import 属于 CSS 范畴，只能加载 CSS。
+- link 引用 CSS 时，在页面载入时同时加载；@import 需要页面网页完全载入以后加载。
+- link 是 XHTML 标签，无兼容问题；@import 是在 CSS2.1 提出的，低版本的浏览器不支持。
+- link 支持使用 Javascript 控制 DOM 去改变样式；而 @import 不支持。 
+
+## transition 和 animation 的区别
+
+- transition 是过度属性，强调过度，它的实现需要触发一个事件（比如鼠标移动上去，焦点，点击等）才执行动画。它类似于 flash 的补间动画，设置一个开始关键帧，一个结束关键帧。
+- animation 是动画属性，它的实现不需要触发事件，设定好时间之后可以自己执行，且可以循环一个动画。它也类似于 flash 的补间动画，但是它可以设置多个关键帧（用 @keyframe 定义）完成动画。
+
+## 伪元素和伪类的区别和作用
+
+伪元素：在内容元素的前后插入额外的元素或样式，但是这些元素实际上并不在文档中生成。它们只在外部显示可见，但不会在文档的源代码中找到它们，因此，称为“伪”元素。例如：
+
+```css
+p::before { content:"第一章："; }
+p::after { content:"Hot!"; }
+p::first-line { background:red; }
+p::first-letter { font-size:30px; }
+```
+
+伪类：将特殊的效果添加到特定选择器上。它是已有元素上添加类别的，不会产生新的元素。例如：
+
+```css
+a:hover { color: #FF00FF }
+p:first-child { color: red }
+```
+
+总结：伪类是通过在元素选择器上加⼊伪类改变元素状态，⽽伪元素通过对元素的操作进⾏对元素的改变。
+
+## 对 requestAnimationframe 的理解
+
+
+
+
+
 
 
 
