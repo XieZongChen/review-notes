@@ -487,7 +487,7 @@ Webpack 能处理 CSS 吗：
 
 ## 如何判断元素是否到达可视区域
 
-### 方法一
+### 方法一 计算
 
 ![image](https://github.com/XieZongChen/review-notes/assets/46394163/dbc66221-8790-4417-8d93-4f614298a7d5)
 
@@ -497,7 +497,7 @@ Webpack 能处理 CSS 吗：
 - imgs.offsetTop 是元素顶部距离文档顶部的高度（包括滚动条的距离）；
 - 内容达到显示区域的：img.offsetTop < window.innerHeight + document.body.scrollTop;
 
-### 方法二
+### 方法二 getBoundingClientRect
 
 getBoundingClientRect，返回值是一个 DOMRect 对象，拥有 left, top, right, bottom, x, y, width 和 height 属性，属性对应的关系图如下所示：
 
@@ -509,7 +509,7 @@ getBoundingClientRect，返回值是一个 DOMRect 对象，拥有 left, top, ri
 3. bottom 小于等于视窗高度
 4. right 小于等于视窗宽度
 
-### 方法三
+### 方法三 IntersectionObserver
 
 IntersectionObserver 即重叠观察者，从这个命名就可以看出它用于判断两个元素是否重叠，因为不用进行事件的监听，性能方面相比 getBoundingClientRect 会好很多
 
@@ -555,6 +555,45 @@ const target = document.querySelector('.target');
 observer.observe(target);
 ```
 
+## z-index 属性在什么情况下会失效
+
+通常 z-index 的使用是在有两个重叠的标签，在一定的情况下控制其中一个在另一个的上方或者下方出现。z-index 值越大就越是在上层。z-index 元素的 position 属性需要是 relative，absolute 或是 fixed。
+
+z-index 属性在下列情况下会失效：
+- 父元素 position 为 relative 时，子元素的 z-index 失效。解决：父元素 position 改为 absolute 或 static；
+- 元素没有设置 position 属性为非 static 属性。解决：设置该元素的 position 属性为 relative，absolute 或是 fixed 中的一种；
+- 元素在设置 z-index 的同时还设置了 float 浮动。解决：float 去除，改为 display：inline-block；
+
+## CSS3 中的 transform 有哪些属性
+
+CSS [transform](https://developer.mozilla.org/zh-CN/docs/Web/CSS/transform) 属性允许你旋转，缩放，倾斜或平移给定元素。这是通过修改 CSS 视觉格式化模型的坐标空间来实现的。transform 属性可以指定为关键字值 none 或一个或多个 `<transform-function>` 值。
+
+`<transform-function>` CSS 数据类型用于对元素的显示做变换。通常，这种变换可以由矩阵表示，并且可以使用每个点上的矩阵乘法来确定所得到的图像。要应用的一个或多个 CSS 变换函数。变换函数按**从左到右的顺序相乘**，这意味着复合变换按从右到左的顺序有效地应用。下面简单展示下 `<transform-function>` 值都有哪些，详情见 [transform-function](https://developer.mozilla.org/zh-CN/docs/Web/CSS/transform-function)
+
+| transform function | 解释 |
+| ------------------ | --- |
+| none |	定义不进行转换 |
+| matrix(n,n,n,n,n,n) | 定义 2D 转换，使用六个值的矩阵 |
+| matrix3d(n,n,n,n,n,n,n,n,n,n,n,n,n,n,n,n) | 定义 3D 转换，使用 16 个值的 4x4 矩阵 |
+| translate(x,y) | 定义 2D 转换（平移） |
+| translate3d(x,y,z) | 定义 3D 转换 |
+| translateX(x) | 定义转换，只是用 X 轴的值 |
+| translateY(y) | 定义转换，只是用 Y 轴的值 |
+| translateZ(z) | 定义 3D 转换，只是用 Z 轴的值 |
+| scale(x,y) | 定义 2D 缩放转换 |
+| scale3d(x,y,z) | 定义 3D 缩放转换 |
+| scaleX(x) | 通过设置 X 轴的值来定义缩放转换 |
+| scaleY(y) | 通过设置 Y 轴的值来定义缩放转换 |
+| scaleZ(z) | 通过设置 Z 轴的值来定义 3D 缩放转换 |
+| rotate(angle) | 定义 2D 旋转，在参数中规定角度 |
+| rotate3d(x,y,z,angle) | 定义 3D 旋转 |
+| rotateX(angle) | 定义沿着 X 轴的 3D 旋转 |
+| rotateY(angle) | 定义沿着 Y 轴的 3D 旋转 |
+| rotateZ(angle) | 定义沿着 Z 轴的 3D 旋转 |
+| skew(x-angle,y-angle) | 定义沿着 X 和 Y 轴的 2D 倾斜转换 |
+| skewX(angle) | 定义沿着 X 轴的 2D 倾斜转换 |
+| skewY(angle) | 定义沿着 Y 轴的 2D 倾斜转换 |
+| perspective(n) | 为 3D 转换元素定义透视视图 |
 
 
 
