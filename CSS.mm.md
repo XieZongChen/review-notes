@@ -568,7 +568,7 @@ z-index 属性在下列情况下会失效：
 
 CSS [transform](https://developer.mozilla.org/zh-CN/docs/Web/CSS/transform) 属性允许你旋转，缩放，倾斜或平移给定元素。这是通过修改 CSS 视觉格式化模型的坐标空间来实现的。transform 属性可以指定为关键字值 none 或一个或多个 `<transform-function>` 值。
 
-`<transform-function>` CSS 数据类型用于对元素的显示做变换。通常，这种变换可以由矩阵表示，并且可以使用每个点上的矩阵乘法来确定所得到的图像。要应用的一个或多个 CSS 变换函数。变换函数按**从左到右的顺序相乘**，这意味着复合变换按从右到左的顺序有效地应用。下面简单展示下 `<transform-function>` 值都有哪些，详情见 [transform-function](https://developer.mozilla.org/zh-CN/docs/Web/CSS/transform-function)
+`<transform-function>` CSS 数据类型用于对元素的显示做变换。通常，这种变换可以由矩阵表示，并且可以使用每个点上的矩阵乘法来确定所得到的图像。要应用的一个或多个 CSS 变换函数。变换函数按 **从左到右的顺序相乘**，这意味着复合变换按从右到左的顺序有效地应用。下面简单展示下 `<transform-function>` 值都有哪些，详情见 [transform-function](https://developer.mozilla.org/zh-CN/docs/Web/CSS/transform-function)
 
 | transform function | 解释 |
 | ------------------ | --- |
@@ -631,13 +631,368 @@ vw/vh 和百分比很类似，两者的区别：
 - 对于只需要适配少部分移动设备，且分辨率对页面影响不大的，使用 px 即可 。
 - 对于需要适配各种移动设备，使用 rem，例如需要适配 iPhone 和 iPad 等分辨率差别比较挺大的设备。
 
+## 两栏布局的实现
 
+一般两栏布局指的是 **左边一栏宽度固定，右边一栏宽度自适应**，两栏布局的具体实现：
 
+1. 利用浮动，将左边元素宽度设置为 200px，并且设置向左浮动。将右边元素的 margin-left 设置为 200px，宽度设置为 auto（默认为 auto，撑满整个父元素）。
 
+```css
+.outer {
+  height: 100px;
+}
+.left {
+  float: left;
+  width: 200px;
+  background: tomato;
+}
+.right {
+  margin-left: 200px;
+  width: auto;
+  background: gold;
+}
+```
 
+2. 利用浮动，左侧元素设置固定大小，并左浮动，右侧元素设置 overflow: hidden; 这样右边就触发了 BFC，BFC 的区域不会与浮动元素发生重叠，所以两侧就不会发生重叠。
 
+```css
+.left{
+     width: 100px;
+     height: 200px;
+     background: red;
+     float: left;
+ }
+ .right{
+     height: 300px;
+     background: blue;
+     overflow: hidden;
+ }
+```
 
+3. 利用 flex 布局，将左边元素设置为固定宽度 200px，将右边的元素设置为 flex:1。
 
+```css
+.outer {
+  display: flex;
+  height: 100px;
+}
+.left {
+  width: 200px;
+  background: tomato;
+}
+.right {
+  flex: 1;
+  background: gold;
+}
+```
+
+4. 利用绝对定位，将父级元素设置为相对定位。左边元素设置为 absolute 定位，并且宽度设置为 200px。将右边元素的 margin-left 的值设置为 200px。
+
+```css
+.outer {
+  position: relative;
+  height: 100px;
+}
+.left {
+  position: absolute;
+  width: 200px;
+  height: 100px;
+  background: tomato;
+}
+.right {
+  margin-left: 200px;
+  background: gold;
+}
+```
+
+5. 利用绝对定位，将父级元素设置为相对定位。左边元素宽度设置为 200px，右边元素设置为绝对定位，左边定位为 200px，其余方向定位为 0。
+
+```css
+.outer {
+  position: relative;
+  height: 100px;
+}
+.left {
+  width: 200px;
+  background: tomato;
+}
+.right {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 200px;
+  background: gold;
+}
+```
+
+## 三栏布局的实现
+
+三栏布局一般指的是 **页面中一共有三栏，左右两栏宽度固定，中间自适应的布局**，三栏布局的具体实现：
+
+1. 利用绝对定位，左右两栏设置为绝对定位，中间设置对应方向大小的 margin 的值。
+
+```css
+.outer {
+  position: relative;
+  height: 100px;
+}
+
+.left {
+  position: absolute;
+  width: 100px;
+  height: 100px;
+  background: tomato;
+}
+
+.right {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 200px;
+  height: 100px;
+  background: gold;
+}
+
+.center {
+  margin-left: 100px;
+  margin-right: 200px;
+  height: 100px;
+  background: lightgreen;
+}
+```
+
+2. 利用 flex 布局，左右两栏设置固定大小，中间一栏设置为 flex:1。
+
+```css
+.outer {
+  display: flex;
+  height: 100px;
+}
+
+.left {
+  width: 100px;
+  background: tomato;
+}
+
+.right {
+  width: 100px;
+  background: gold;
+}
+
+.center {
+  flex: 1;
+  background: lightgreen;
+}
+```
+
+3. 利用浮动，左右两栏设置固定大小，并设置对应方向的浮动。中间一栏设置左右两个方向的 margin 值，注意这种方式中间一栏必须放到最后：
+
+```css
+.outer {
+  height: 100px;
+}
+
+.left {
+  float: left;
+  width: 100px;
+  height: 100px;
+  background: tomato;
+}
+
+.right {
+  float: right;
+  width: 200px;
+  height: 100px;
+  background: gold;
+}
+
+.center {
+  height: 100px;
+  margin-left: 100px;
+  margin-right: 200px;
+  background: lightgreen;
+}
+```
+
+4. 圣杯布局，利用浮动和负边距来实现。父级元素设置左右的 padding，三列均设置向左浮动，中间一列放在最前面，宽度设置为父级元素的宽度，因此后面两列都被挤到了下一行，通过设置 margin 负值将其移动到上一行，再利用相对定位，定位到两边。
+
+```css
+.outer {
+  height: 100px;
+  padding-left: 100px;
+  padding-right: 200px;
+}
+
+.left {
+  position: relative;
+  left: -100px;
+
+  float: left;
+  margin-left: -100%;
+
+  width: 100px;
+  height: 100px;
+  background: tomato;
+}
+
+.right {
+  position: relative;
+  left: 200px;
+
+  float: right;
+  margin-left: -200px;
+
+  width: 200px;
+  height: 100px;
+  background: gold;
+}
+
+.center {
+  float: left;
+
+  width: 100%;
+  height: 100px;
+  background: lightgreen;
+}
+```
+
+5. 双飞翼布局，双飞翼布局相对于圣杯布局来说，左右位置的保留是通过中间列的 margin 值来实现的，而不是通过父元素的 padding 来实现的。本质上来说，也是通过浮动和外边距负值来实现的。
+
+```css
+.outer {
+  height: 100px;
+}
+
+.left {
+  float: left;
+  margin-left: -100%;
+
+  width: 100px;
+  height: 100px;
+  background: tomato;
+}
+
+.right {
+  float: left;
+  margin-left: -200px;
+
+  width: 200px;
+  height: 100px;
+  background: gold;
+}
+
+.wrapper {
+  float: left;
+
+  width: 100%;
+  height: 100px;
+  background: lightgreen;
+}
+
+.center {
+  margin-left: 100px;
+  margin-right: 200px;
+  height: 100px;
+}
+```
+
+## 水平垂直居中的实现
+
+1. 利用绝对定位，先将元素的左上角通过 top:50%和 left:50%定位到页面的中心，然后再通过 translate 来调整元素的中心点到页面的中心。该方法 **需要考虑浏览器兼容问题**。
+
+```css
+.parent {
+    position: relative;
+}
+
+.child {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%,-50%);
+}
+```
+
+2. 利用绝对定位，设置四个方向的值都为 0，并将 margin 设置为 auto，由于宽高固定，因此对应方向实现平分，可以实现水平和垂直方向上的居中。该方法适用于 **盒子有宽高** 的情况：
+
+```css
+.parent {
+    position: relative;
+}
+
+.child {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+```
+
+3. 利用绝对定位，先将元素的左上角通过 top:50% 和 left:50% 定位到页面的中心，然后再通过 margin 负值来调整元素的中心点到页面的中心。该方法适用于 **盒子宽高已知** 的情况
+
+```css
+.parent {
+    position: relative;
+}
+
+.child {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-top: -50px;     /* 自身 height 的一半 */
+    margin-left: -50px;    /* 自身 width 的一半 */
+}
+```
+
+4. table 布局，设置父元素为 display:table-cell，子元素设置 display: inline-block。利用 vertical 和 text-align 可以让所有的行内块级元素水平垂直居中，该方法适用于 **盒子有宽高** 的情况
+
+```css
+.parent {
+   display: table-cell;
+   width: 200px;
+   height: 200px;
+   background: skyblue;
+   vertical-align: middle;
+   text-align: center;
+}
+.child {
+   display: inline-block;
+   width: 100px;
+   height: 100px;
+   background: red;
+}
+```
+
+5. 使用 flex 布局，通过 align-items:center 和 justify-content:center 设置容器的垂直和水平方向上为居中对齐，然后它的子元素也可以实现垂直和水平的居中，**该方法不需要知道元素宽高**
+
+```css
+.parent {
+    display: flex;
+    justify-content:center;
+    align-items:center;
+}
+```
+
+6. grid 网格布局，**该方法不需要知道元素宽高**
+
+```css
+.parent {
+   display: grid;
+   align-items:center;
+   justify-content: center;
+   width: 200px;
+   height: 200px;
+   background: skyblue;
+}
+.child {
+   width: 10px;
+   height: 10px;
+   border: 1px solid red
+}
+```
 
 
 
