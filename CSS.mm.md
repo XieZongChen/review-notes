@@ -1233,6 +1233,172 @@ sticky 英文字面意思是粘贴，所以可以把它称之为粘性定位。�
 
 # 场景应用
 
+## 实现一个三角形
+
+CSS 绘制三角形主要用到的是 border 属性，也就是边框。
+
+平时在给盒子设置边框时，往往都设置很窄，就可能误以为边框是由矩形组成的。实际上，border 属性是右三角形组成的，下面看一个例子：
+
+```css
+div {
+    width: 0;
+    height: 0;
+    border: 100px solid;
+    border-color: orange blue red green;
+}
+```
+
+将元素的长宽都设置为 0，显示出来的效果是这样的：
+
+![image](https://github.com/XieZongChen/review-notes/assets/46394163/a1ff8683-d04b-4fdf-9ddf-72c0305d28e3)
+
+所以可以根据 border 这个特性来绘制三角形：
+
+- 三角 1
+
+```css
+div {
+    width: 0;
+    height: 0;
+    border-top: 50px solid red;
+    border-right: 50px solid transparent;
+    border-left: 50px solid transparent;
+}
+```
+
+![image](https://github.com/XieZongChen/review-notes/assets/46394163/810b22f0-4191-4784-bb8d-e27d52c14ab1)
+
+- 三角 2
+
+```css
+div {
+    width: 0;
+    height: 0;
+    border-bottom: 50px solid red;
+    border-right: 50px solid transparent;
+    border-left: 50px solid transparent;
+}
+```
+
+![image](https://github.com/XieZongChen/review-notes/assets/46394163/7b269d0d-ffe7-4fbb-8113-41f65213a245)
+
+- 三角 3
+
+```css
+div {
+    width: 0;
+    height: 0;
+    border-left: 50px solid red;
+    border-top: 50px solid transparent;
+    border-bottom: 50px solid transparent;
+}
+```
+
+![image](https://github.com/XieZongChen/review-notes/assets/46394163/3bc43b32-7d19-4c2f-811f-ea9446512bbb)
+
+- 三角 4
+
+```css
+div {
+    width: 0;
+    height: 0;
+    border-right: 50px solid red;
+    border-top: 50px solid transparent;
+    border-bottom: 50px solid transparent;
+}
+```
+
+![image](https://github.com/XieZongChen/review-notes/assets/46394163/92c33b9f-d995-4f9a-b747-436c8900c79a)
+
+- 三角 5
+
+```css
+div {
+    width: 0;
+    height: 0;
+    border-top: 100px solid red;
+    border-right: 100px solid transparent;
+}
+```
+
+![image](https://github.com/XieZongChen/review-notes/assets/46394163/71726e93-7183-49a1-8d38-42844fdf9bed)
+
+还有很多，就不一一实现了，总体的原则就是通过上下左右边框来控制三角形的方向，用边框的宽度比来控制三角形的角度。
+
+## 实现一个扇形
+
+用 CSS 实现扇形的思路和三角形基本一致，就是多了一个圆角的样式，实现一个 90° 的扇形：
+
+```css
+div{
+    border: 100px solid transparent;
+    width: 0;
+    heigt: 0;
+    border-radius: 100px;
+    border-top-color: red;
+}
+```
+
+![image](https://github.com/XieZongChen/review-notes/assets/46394163/e7f734e5-7253-435f-984c-cc8131419dad)
+
+## 实现一个宽高自适应的正方形
+
+- 利用 vw 来实现：
+
+```css
+.square {
+  width: 10%;
+  height: 10vw;
+  background: tomato;
+}
+```
+
+- 利用元素的 margin/padding 百分比是相对父元素 width 的性质来实现：
+
+```css
+.square {
+  width: 20%;
+  height: 0;
+  padding-top: 20%;
+  background: orange;
+}
+```
+
+- 利用子元素的 margin-top 的值来实现：
+
+```css
+.square {
+  width: 30%;
+  overflow: hidden;
+  background: yellow;
+}
+.square::after {
+  content: '';
+  display: block;
+  margin-top: 100%;
+}
+```
+
+## 画一条 0.5px 的线
+
+- 采用 transform: scale()的方式，该方法用来定义元素的 2D 缩放转换：
+
+```css
+transform: scale(0.5,0.5);
+```
+
+- 采用 meta viewport 的方式
+
+```html
+<meta name="viewport" content="width=device-width, initial-scale=0.5, minimum-scale=0.5, maximum-scale=0.5"/>
+```
+
+这样就能缩放到原来的 0.5 倍，如果是 1px 那么就会变成 0.5px。viewport 只针对于移动端，只在移动端上才能看到效果
+
+
+
+
+
 
 
 
