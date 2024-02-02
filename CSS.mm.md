@@ -1161,6 +1161,83 @@ BFC 的作用：
    - 子元素变为行内盒子：display: inline-block
    - 子元素加入浮动属性或定位
 
+## 元素的层叠顺序
+
+层叠顺序，英文称作 stacking order，表示元素发生层叠时有着特定的垂直显示顺序。下面是盒模型的层叠规则：
+
+![image](https://github.com/XieZongChen/review-notes/assets/46394163/cffc8443-a1d0-4fea-a8d3-6aec444d1e0a)
+
+对于上图，由上到下分别是：
+1. 背景和边框：建立当前层叠上下文元素的背景和边框。
+2. 负的 z-index：当前层叠上下文中，z-index 属性值为负的元素。
+3. 块级盒：文档流内非行内级非定位后代元素。
+4. 浮动盒：非定位浮动元素。
+5. 行内盒：文档流内行内级非定位后代元素。
+6. z-index:0：层叠级数为 0 的定位元素。
+7. 正 z-index：z-index 属性值为正的定位元素。
+
+注意: 当定位元素 z-index:auto，生成盒在当前层叠上下文中的层级为 0，不会建立新的层叠上下文，除非是根元素。
+
+## position 的属性有哪些，区别是什么
+
+position 有以下属性值：
+
+| 属性值 | 概述 |
+| ----- | --- |
+| absolute | 生成绝对定位的元素，相对于 static 定位以外的一个父元素进行定位。元素的位置通过 left、top、right、bottom 属性进行规定 |
+| relative | 生成相对定位的元素，相对于其原来的位置进行定位。元素的位置通过 left、top、right、bottom 属性进行规定 |
+| fixed | 生成绝对定位的元素，指定元素相对于屏幕视⼝（viewport）的位置来指定元素位置。元素的位置在屏幕滚动时不会改变，⽐如回到顶部的按钮⼀般都是⽤此定位⽅式 |
+| static | 默认值，没有定位，元素出现在正常的文档流中，会忽略 top, bottom, left, right 或者 z-index 声明，块级元素从上往下纵向排布，⾏级元素从左向右排列 |
+| inherit | 规定从父元素继承 position 属性的值 |
+
+- relative：元素的定位永远是相对于元素自身位置的，和其他元素没关系，也不会影响其他元素。
+
+![image](https://github.com/XieZongChen/review-notes/assets/46394163/6627b48e-74a9-4ad2-9b7d-f037cce75b86)
+
+- fixed：元素的定位是相对于 window （或者 iframe）边界的，和其他元素没有关系。但是它具有破坏性，会导致其他元素位置的变化。
+
+![image](https://github.com/XieZongChen/review-notes/assets/46394163/17208b69-7dd5-4324-bc67-119c7fd497a0)
+
+- absolute：元素的定位相对于前两者要复杂许多。如果为 absolute 设置了 top、left，浏览器会根据什么去确定它的纵向和横向的偏移量呢？答案是浏览器会递归查找该元素的所有父元素，如果找到一个设置了 position:relative/absolute/fixed 的元素，就以该元素为基准定位，如果没找到，就以浏览器边界定位。如下两个图所示：
+
+![image](https://github.com/XieZongChen/review-notes/assets/46394163/98ad39fd-8ffb-4a72-8009-f09d959319f5)
+
+![image](https://github.com/XieZongChen/review-notes/assets/46394163/78986d5e-918c-470f-a189-313ed723c0ee)
+
+## display、float、position 的关系
+
+浏览器处理三者时，会遵循以下逻辑：
+1. 首先判断 display 属性是否为 none，如果为 none，则 position 和 float 属性的值不影响元素最后的表现。
+2. 然后判断 position 的值是否为 absolute 或者 fixed，如果是，则 float 属性失效，并且 display 的值应该被设置为 table 或者 block，具体转换需要看初始转换值。
+3. 如果 position 的值不为 absolute 或者 fixed，则判断 float 属性的值是否为 none，如果不是，则 display 的值则按上面的规则转换。注意，如果 position 的值为 relative 并且 float 属性的值存在，则 relative 相对于浮动后的最终位置定位。
+4. 如果 float 的值为 none，则判断元素是否为根元素，如果是根元素则 display 属性按照上面的规则转换，如果不是，则保持指定的 display 属性值不变。
+
+总的来说，可以把它看作是一个类似优先级的机制，"position:absolute" 和 "position:fixed" 优先级最高，有它存在的时候，浮动不起作用，'display' 的值也需要调整；其次，元素的 'float' 特性的值不是 "none" 的时候或者它是根元素的时候，调整 'display' 的值；最后，非根元素，并且非浮动元素，并且非绝对定位的元素，'display' 特性值同设置值。
+
+## position 的 absolute 与 fixed 共同点与不同点
+
+共同点：
+- 改变行内元素的呈现方式，将 display 置为 inline-block
+- 使元素脱离普通文档流，不再占据文档物理空间
+- 覆盖非定位文档元素
+
+不同点：
+- absolute 与 fixed 的根元素不同，absolute 的根元素可以设置，fixed 根元素是浏览器。
+- 在有滚动条的页面中，absolute 会跟着父元素进行移动，fixed 固定在页面的具体位置。
+
+## 对 sticky 定位的理解
+
+sticky 英文字面意思是粘贴，所以可以把它称之为粘性定位。语法：position: sticky; 基于用户的滚动位置来定位。
+
+粘性定位的元素是依赖于用户的滚动，在 position:relative 与 position:fixed 定位之间切换。它的行为就像 position:relative；而当页面滚动超出目标区域时，它的表现就像 position:fixed，它会固定在目标位置。元素定位表现为在跨越特定阈值前为相对定位，之后为固定定位。这个特定阈值指的是 top, right, bottom 或 left 之一，换言之，指定 top, right, bottom 或 left 四个阈值其中之一，才可使粘性定位生效。否则其行为与相对定位相同。
+
+# 场景应用
+
+
+
+
+
+
 
 
 
