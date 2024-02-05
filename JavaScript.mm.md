@@ -206,10 +206,43 @@ NaN 是一个特殊值，它和自身不相等，是唯一一个非自反（自�
 - 使用三等号 `===` 进行相等判断时，如果两边的类型不一致时，不会做强制类型准换，直接返回 false。
 - 使用 Object.is 来进行相等判断时，一般情况下和三等号的判断相同，它处理了一些特殊的情况，比如 -0 和 +0 不再相等，两个 NaN 是相等的。
 
+## 什么是 JavaScript 中的包装类型
 
+在 JavaScript 中，基本类型是没有属性和方法的，但是为了便于操作基本类型的值，在调用基本类型的属性或方法时 JavaScript 会在后台隐式地将基本类型的值转换为对象，如：
 
+```javascript
+const a = "abc";
+a.length; // 3
+a.toUpperCase(); // "ABC"
+```
 
+在访问 `'abc'.length` 时，JavaScript 将 `'abc'` 在后台转换成 `String('abc')`，然后再访问其 length 属性。
 
+JavaScript 也可以使用 Object 函数显式地将基本类型转换为包装类型：
+
+```javascript
+var a = 'abc'
+Object(a) // String {"abc"}
+```
+
+也可以使用 valueOf 方法将包装类型倒转成基本类型：
+
+```javascript
+var a = 'abc'
+var b = Object(a)
+var c = b.valueOf() // 'abc'
+```
+
+看看如下代码会打印出什么：
+
+```javascript
+var a = new Boolean( false );
+if (!a) {
+    console.log( "Oops" ); // never runs
+}
+```
+
+答案是什么都不会打印，因为虽然包裹的基本类型是false，但是false被包裹成包装类型后就成了对象，所以其非值为false，所以循环体中的内容不会运行。
 
 
 
