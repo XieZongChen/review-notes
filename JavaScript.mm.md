@@ -161,8 +161,18 @@ typeof NaN; // "number"
 
 NaN 是一个特殊值，它和自身不相等，是唯一一个非自反（自反，reflexive，即 x === x 不成立）的值。而 NaN !== NaN 为 true
 
+## isNaN 和 Number.isNaN 函数的区别
 
+- 函数 isNaN 接收参数后，会尝试将这个参数转换为数值，任何不能被转换为数值的的值都会返回 true，因此非数字值传入也会返回 true ，会影响 NaN 的判断。
+- 函数 Number.isNaN 会首先判断传入参数是否为数字，如果是数字再继续判断是否为 NaN ，不会进行数据类型的转换，这种方法对于 NaN 的判断更为准确。
 
+## 其他值到字符串的转换规则
+
+- Null 和 Undefined 类型 ，null 转换为 "null"，undefined 转换为 "undefined"，
+- Boolean 类型，true 转换为 "true"，false 转换为 "false"。
+- Number 类型的值直接转换，不过那些极小和极大的数字会使用指数形式。
+- Symbol 类型的值直接转换，但是只允许显式强制类型转换，使用隐式强制类型转换会产生错误。
+- 对普通对象来说，除非自行定义 toString() 方法，否则会调用 toString()（Object.prototype.toString()）来返回内部属性 [[Class]] 的值，如"[object Object]"。如果对象有自己的 toString() 方法，字符串化时就会调用该方法并使用其返回值。
 
 
 
