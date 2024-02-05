@@ -236,9 +236,9 @@ var c = b.valueOf() // 'abc'
 看看如下代码会打印出什么：
 
 ```javascript
-var a = new Boolean( false );
+var a = new Boolean(false);
 if (!a) {
-    console.log( "Oops" ); // never runs
+    console.log("Oops"); // never runs
 }
 ```
 
