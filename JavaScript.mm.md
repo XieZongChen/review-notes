@@ -364,6 +364,37 @@ a + b // "[object Object][object Object]"
 
 JavaScript 中 Number.MAX_SAFE_INTEGER 表示最⼤安全数字，计算结果是 9007199254740991，即在这个数范围内不会出现精度丢失（⼩数除外）。但是⼀旦超过这个范围，js 就会出现计算不准确的情况，这在⼤数计算的时候不得不依靠⼀些第三⽅库进⾏解决，因此官⽅提出了 BigInt 来解决此问题。
 
+## object.assign 和扩展运算法是深拷贝还是浅拷贝，两者区别
+
+扩展运算符：
+
+```javascript
+let outObj = {
+  inObj: {a: 1, b: 2}
+}
+let newObj = {...outObj}
+newObj.inObj.a = 2
+console.log(outObj) // {inObj: {a: 2, b: 2}}
+```
+
+Object.assign():
+
+```javascript
+let outObj = {
+  inObj: {a: 1, b: 2}
+}
+let newObj = Object.assign({}, outObj)
+newObj.inObj.a = 2
+console.log(outObj) // {inObj: {a: 2, b: 2}}
+```
+
+可以看到，两者都是浅拷贝。
+- Object.assign() 方法接收的第一个参数作为目标对象，后面的所有参数作为源对象。然后把所有的源对象合并到目标对象中。它会修改了一个对象，因此会触发 ES6 setter。
+- 扩展操作符（…）使用它时，数组或对象中的每一个值都会被拷贝到一个新的数组或对象中。它不复制继承的属性或类的属性，但是它会复制 ES6 的 symbols 属性。
+
+
+
+
 
 
 
