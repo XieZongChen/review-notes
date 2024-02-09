@@ -453,8 +453,36 @@ new 操作符的实现步骤如下：
 7. 箭头函数没有 prototype
 8. 箭头函数不能用作 Generator 函数，不能使用 yeild 关键字
 
+## 箭头函数的this指向哪⾥
 
+箭头函数不同于传统 JavaScript 中的函数，箭头函数并没有属于⾃⼰的 this，它所谓的 this 是捕获其所在上下⽂的 this 值，作为⾃⼰的 this 值，并且由于没有属于⾃⼰的 this，所以是不会被 new 调⽤的，这个所谓的 this 也不会被改变。
 
+可以⽤ Babel 理解⼀下箭头函数:
+
+```javascript
+// ES6 
+const obj = { 
+  getArrow() { 
+    return () => { 
+      console.log(this === obj); 
+    }; 
+  } 
+}
+```
+
+转化后：
+
+```javascript
+// ES5，由 Babel 转译
+var obj = { 
+   getArrow: function getArrow() { 
+     var _this = this; 
+     return function () { 
+        console.log(_this === obj); 
+     }; 
+   } 
+};
+```
 
 
 
