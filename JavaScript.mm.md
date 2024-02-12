@@ -524,11 +524,39 @@ var obj = {
    const { age, name } = stu
    ```
 
+## 如何提取高度嵌套的对象里的指定属性
 
+有时会遇到一些嵌套程度非常深的对象：
 
+```javascript
+const school = {
+   classes: {
+      stu: {
+         name: 'Bob',
+         age: 24,
+      }
+   }
+}
+```
 
+像此处的 name 这个变量，嵌套了四层，位于 school 对象的“儿子的儿子”对象里面。要想把 name 提取出来，一种比较笨的方法是逐层解构：
 
+```javascript
+const { classes } = school
+const { stu } = classes
+const { name } = stu
+name // 'Bob'
+```
 
+但是还有一种更标准的做法，可以用一行代码来解决这个问题：
+
+```javascript
+const { classes: { stu: { name } }} = school
+       
+console.log(name)  // 'Bob'
+```
+
+可以在解构出来的变量名右侧，通过 `冒号 + { 目标属性名 }` 这种形式，进一步解构它，一直解构到拿到目标数据为止。
 
 
 
