@@ -584,7 +584,59 @@ mutiple(1, 2, 3, 4) // [1, 2, 3, 4]
 
 这就是 `…rest` 运算符的又一层威力了，它可以把函数的多个入参收敛进一个数组里。这一点经常用于获取函数的多余参数，或者像上面这样处理函数参数个数不确定的情况。也可以用于取剩余参数。
 
+## ES6 中模板语法与字符串处理
 
+ES6 提出了“模板语法”的概念。
+
+```javascript
+var name = 'css'   
+var career = 'coder' 
+var hobby = ['coding', 'writing']
+var finalString = `my name is ${name}, I work as a ${career} I love ${hobby[0]} and ${hobby[1]}`
+```
+
+字符串不仅更容易拼了，也更易读了，代码整体的质量都变高了。这就是模板字符串的第一个优势——允许用 `${}` 的方式嵌入变量。但这还不是问题的关键，模板字符串的关键优势有两个：
+- 在模板字符串中，空格、缩进、换行都会被保留
+- 模板字符串完全支持“运算”式的表达式，可以在 `${}` 里完成一些计算
+
+除了模板语法外， ES6中还新增了一系列的字符串方法用于提升开发效率：
+1. 存在性判定：在过去，当判断一个字符/字符串是否在某字符串中时，只能用 indexOf > -1 来做。现在 ES6 提供了三个方法：includes、startsWith、endsWith，它们都会返回一个布尔值来告诉你是否存在
+2. 自动重复：可以使用 repeat 方法来使同一个字符串输出多次（被连续复制多次）
+
+# JavaScript 基础
+
+## new 操作符的实现原理
+
+new操作符的执行过程：
+1. 首先创建了一个新的空对象
+2. 设置原型，将对象的原型设置为函数的 prototype 对象。
+3. 让函数的 this 指向这个对象，执行构造函数的代码（为这个新对象添加属性）
+4. 判断函数的返回值类型，如果是值类型，返回创建的对象。如果是引用类型，就返回这个引用类型的对象。
+
+具体实现：
+
+```javascript
+function objectFactory() {
+  let newObject = null;
+  let constructor = Array.prototype.shift.call(arguments);
+  let result = null;
+  // 判断参数是否是一个函数
+  if (typeof constructor !== "function") {
+    console.error("type error");
+    return;
+  }
+  // 新建一个空对象，对象的原型为构造函数的 prototype 对象
+  newObject = Object.create(constructor.prototype);
+  // 将 this 指向新建对象，并执行函数
+  result = constructor.apply(newObject, arguments);
+  // 判断返回对象
+  let flag = result && (typeof result === "object" || typeof result === "function");
+  // 判断返回结果
+  return flag ? result : newObject;
+}
+// 使用方法
+objectFactory(构造函数, 初始化参数);
+```
 
 
 
