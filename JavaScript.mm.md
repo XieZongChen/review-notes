@@ -731,7 +731,15 @@ JSON 是一种基于文本的轻量级的数据交换格式。它可以被任何
 3. 通过 apply 调用数组的 concat 方法来实现转换 `Array.prototype.concat.apply([], arrayLike);`
 4. 通过 Array.from 方法来实现转换 `Array.from(arrayLike);`
 
-## 
+## 数组有哪些原生方法
+
+- 数组和字符串的转换方法：toString()、toLocalString()、join() 其中 join() 方法可以指定转换为字符串时的分隔符
+- 数组尾部操作的方法 pop() 和 push()，push 方法可以传入多个参数
+- 数组首部操作的方法 shift() 和 unshift() 重排序的方法 reverse() 和 sort()，sort() 方法可以传入一个函数来进行比较，传入前后两个值，如果返回值为正数，则交换两个参数的位置
+- 数组连接的方法 concat() ，返回的是拼接好的数组，不影响原数组
+- 数组截取办法 slice()，用于截取数组中的一部分返回，不影响原数组
+- 数组插入方法 splice()，影响原数组查找特定项的索引的方法，indexOf() 和 lastIndexOf() 迭代方法 every()、some()、filter()、map() 和 forEach() 方法
+- 数组归并方法 reduce() 和 reduceRight() 方法
 
 
 
