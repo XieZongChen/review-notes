@@ -801,6 +801,82 @@ arguments 是一个对象，它的属性是从 0 开始依次递增的数字，�
 - 通过 apply 调用数组的 concat 方法来实现转换 `Array.prototype.concat.apply([], arrayLike);`
 - 通过 Array.from 方法来实现转换 `Array.from(arrayLike);`
 
+## escape、encodeURI、encodeURIComponent 的区别
+
+- encodeURI 是对整个 URI 进行转义，将 URI 中的非法字符转换为合法字符，所以对于一些在 URI 中有特殊意义的字符不会进行转义。
+- encodeURIComponent 是对 URI 的组成部分进行转义，所以一些特殊字符也会得到转义。
+- escape 和 encodeURI 的作用相同，不过它们对于 unicode 编码为 0xff 之外字符的时候会有区别，escape 是直接在字符的 unicode 编码前加上 %u，而 encodeURI 首先会将字符转换为 UTF-8 的格式，再在每个字节前加上 %。
+
+## 对 AJAX 的理解，实现一个 AJAX 请求
+
+AJAX 是 Asynchronous JavaScript and XML 的缩写，指的是通过 JavaScript 的异步通信，从服务器获取 XML 文档从中提取数据，再更新当前网页的对应部分，而不用刷新整个网页。
+
+创建 AJAX 请求的步骤：
+1. 创建一个 XMLHttpRequest 对象。
+2. 在这个对象上使用 open 方法创建一个 HTTP 请求，open 方法所需要的参数是请求的方法、请求的地址、是否异步和用户的认证信息。
+3. 在发起请求前，可以为这个对象添加一些信息和监听函数。比如说可以通过 setRequestHeader 方法来为请求添加头信息。还可以为这个对象添加一个状态监听函数。一个 XMLHttpRequest 对象一共有 5 个状态，当它的状态变化时会触发onreadystatechange 事件，可以通过设置监听函数，来处理请求成功后的结果。当对象的 readyState 变为 4 的时候，代表服务器返回的数据接收完成，这个时候可以通过判断请求的状态，如果状态是 2xx 或者 304 的话则代表返回正常。这个时候就可以通过 response 中的数据来对页面进行更新了。
+4. 当对象的属性和监听函数设置完成后，最后调用 sent 方法来向服务器发起请求，可以传入参数作为发送的数据体。
+
+```javascript
+const SERVER_URL = "/server";
+let xhr = new XMLHttpRequest();
+// 创建 Http 请求
+xhr.open("GET", url, true);
+// 设置状态监听函数
+xhr.onreadystatechange = function() {
+  if (this.readyState !== 4) return;
+  // 当请求成功时
+  if (this.status === 200) {
+    handle(this.response);
+  } else {
+    console.error(this.statusText);
+  }
+};
+// 设置请求失败时的监听函数
+xhr.onerror = function() {
+  console.error(this.statusText);
+};
+// 设置请求头信息
+xhr.responseType = "json";
+xhr.setRequestHeader("Accept", "application/json");
+// 发送 Http 请求
+xhr.send(null);
+```
+
+使用 Promise 封装 AJAX：
+
+```javascript
+// promise 封装实现：
+function getJSON(url) {
+  // 创建一个 promise 对象
+  let promise = new Promise(function(resolve, reject) {
+    let xhr = new XMLHttpRequest();
+    // 新建一个 http 请求
+    xhr.open("GET", url, true);
+    // 设置状态的监听函数
+    xhr.onreadystatechange = function() {
+      if (this.readyState !== 4) return;
+      // 当请求成功或失败时，改变 promise 的状态
+      if (this.status === 200) {
+        resolve(this.response);
+      } else {
+        reject(new Error(this.statusText));
+      }
+    };
+    // 设置错误监听函数
+    xhr.onerror = function() {
+      reject(new Error(this.statusText));
+    };
+    // 设置响应的数据类型
+    xhr.responseType = "json";
+    // 设置请求头信息
+    xhr.setRequestHeader("Accept", "application/json");
+    // 发送 http 请求
+    xhr.send(null);
+  });
+  return promise;
+}
+```
 
 
 
