@@ -945,6 +945,25 @@ ES6 Module 和 CommonJS 模块的区别：
 
 ES6 Module 和 CommonJS 模块的共同点：CommonJS 和 ES6 Module 都可以对引⼊的对象进⾏赋值，即对对象内部属性的值进⾏改变。
 
+## use strict是什么意思? 使用它区别是什么
+
+use strict 是一种 ECMAscript5 添加的（严格模式）运行模式，这种模式使得 Javascript 在更严格的条件下运行。设立严格模式的目的如下：
+1. 消除 Javascript 语法的不合理、不严谨之处，减少怪异行为;
+2. 消除代码运行的不安全之处，保证代码运行的安全；
+3. 提高编译器效率，增加运行速度；
+4. 为未来新版本的 Javascript 做好铺垫。
+
+区别：
+- 禁止使用 with 语句。
+- 禁止 this 关键字指向全局对象。
+- 对象不能有重名的属性。
+
+## 如何判断一个对象是否属于某个类
+
+- 第一种方式，使用 instanceof 运算符来判断构造函数的 prototype 属性是否出现在对象的原型链中的任何位置。
+- 第二种方式，通过对象的 constructor 属性来判断，对象的 constructor 属性指向该对象的构造函数，但是这种方式不是很安全，因为 constructor 属性可以被改写。
+- 第三种方式，如果需要判断的是某个内置的引用类型的话，可以使用 Object.prototype.toString() 方法来打印对象的 `[[Class]]` 属性来进行判断。
+
 
 
 
