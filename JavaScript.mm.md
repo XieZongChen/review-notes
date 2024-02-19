@@ -1087,8 +1087,150 @@ for(var [k,v] of obj){
    - 自动转换 json 数据
    - 客户端支持抵御 XSRF 攻击
 
+## forEach 和 map 方法有什么区别
 
+这方法都是用来遍历数组的，两者区别如下：
+- forEach()方法会针对每一个元素执行提供的函数，对数据的操作会改变原数组，该方法没有返回值；
+- map()方法不会改变原数组的值，返回一个新数组，新数组中的值为原数组调用函数处理之后的值；
 
+# 原型与原型链
+
+## 对原型、原型链的理解
+
+在 JavaScript 中是使用构造函数来新建一个对象的，每一个构造函数的内部都有一个 prototype 属性，它的属性值是一个对象，这个对象包含了可以由该构造函数的所有实例共享的属性和方法。当使用构造函数新建一个对象后，在这个对象的内部将包含一个指针，这个指针指向构造函数的 prototype 属性对应的值，在 ES5 中这个指针被称为对象的原型。一般来说不应该能够获取到这个值的，但是现在浏览器中都实现了 proto 属性来访问这个属性，但是最好不要使用这个属性，因为它不是规范中规定的。ES5 中新增了一个 Object.getPrototypeOf() 方法，可以通过这个方法来获取对象的原型。
+
+当访问一个对象的属性时，如果这个对象内部不存在这个属性，那么它就会去它的原型对象里找这个属性，这个原型对象又会有自己的原型，于是就这样一直找下去，也就是原型链的概念。原型链的尽头一般来说都是 Object.prototype 所以这就是新建的对象为什么能够使用 toString() 等方法的原因。
+
+特点： JavaScript 对象是通过引用来传递的，创建的每个新对象实体中并没有一份属于自己的原型副本。当修改原型时，与之相关的对象也会继承这一改变。 
+
+## 原型修改、重写
+
+```javascript
+function Person(name) {
+    this.name = name
+}
+// 修改原型
+Person.prototype.getName = function() {}
+var p = new Person('hello')
+console.log(p.__proto__ === Person.prototype) // true
+console.log(p.__proto__ === p.constructor.prototype) // true
+// 重写原型
+Person.prototype = {
+    getName: function() {}
+}
+var p = new Person('hello')
+console.log(p.__proto__ === Person.prototype)        // true
+console.log(p.__proto__ === p.constructor.prototype) // false
+```
+
+可以看到修改原型的时候 p 的构造函数不是指向 Person 了，因为直接给 Person 的原型对象直接用对象赋值时，它的构造函数指向的了根构造函数 Object，所以这时候 p.constructor === Object ，而不是 p.constructor === Person。要想成立，就要用 constructor 指回来：
+
+```javascript
+Person.prototype = {
+    getName: function() {}
+}
+var p = new Person('hello')
+p.constructor = Person
+console.log(p.__proto__ === Person.prototype)        // true
+console.log(p.__proto__ === p.constructor.prototype) // true
+```
+
+## 原型链指向
+
+```javascript
+p.__proto__  // Person.prototype
+Person.prototype.__proto__  // Object.prototype
+p.__proto__.__proto__ //Object.prototype
+p.__proto__.constructor.prototype.__proto__ // Object.prototype
+Person.prototype.constructor.prototype.__proto__ // Object.prototype
+p1.__proto__.constructor // Person
+Person.prototype.constructor  // Person
+```
+
+## 原型链的终点是什么？如何打印出原型链的终点
+
+由于 Object 是构造函数，原型链终点是 `Object.prototype.__proto__`，而 `Object.prototype.__proto__=== null // true`，所以，原型链的终点是 null。原型链上的所有原型都是对象，所有的对象最终都是由 Object 构造的，而 Object.prototype 的下一级是 `Object.prototype.__proto__`。 
+
+## 如何获得对象非原型链上的属性
+
+使用后 `hasOwnProperty()` 方法来判断属性是否属于原型链的属性：
+
+```javascript
+function iterate(obj){
+   var res=[];
+   for(var key in obj){
+        if(obj.hasOwnProperty(key))
+           res.push(key+': '+obj[key]);
+   }
+   return res;
+}
+```
+
+# 执行上下文/作用域链/闭包
+
+## 对闭包的理解
+
+闭包是指有权访问另一个函数作用域中变量的函数，创建闭包的最常见的方式就是在一个函数内创建另一个函数，创建的函数可以访问到当前函数的局部变量。
+
+闭包有两个常用的用途；
+- 闭包的第一个用途是使我们在函数外部能够访问到函数内部的变量。通过使用闭包，可以通过在外部调用闭包函数，从而在外部访问到函数内部的变量，可以使用这种方法来创建私有变量。
+- 闭包的另一个用途是使已经运行结束的函数上下文中的变量对象继续留在内存中，因为闭包函数保留了这个变量对象的引用，所以这个变量对象不会被回收。
+
+比如，函数 A 内部有一个函数 B，函数 B 可以访问到函数 A 中的变量，那么函数 B 就是闭包。
+
+```javascript
+function A() {
+  let a = 1
+  window.B = function () {
+      console.log(a)
+  }
+}
+A()
+B() // 1
+```
+
+在 JS 中，闭包存在的意义就是让我们可以间接访问函数内部的变量。经典面试题：循环中使用闭包解决 var 定义函数的问题
+
+```javascript
+for (var i = 1; i <= 5; i++) {
+  setTimeout(function timer() {
+    console.log(i)
+  }, i * 1000)
+}
+```
+
+首先因为 setTimeout 是个异步函数，所以会先把循环全部执行完毕，这时候 i 就是 6 了，所以会输出一堆 6。解决办法有三种：
+1. 第一种是使用闭包的方式
+   ```javascript
+   for (var i = 1; i <= 5; i++) {
+     (function (j) {
+       setTimeout(function timer() {
+         console.log(j);
+       }, j * 1000);
+     })(i);
+   }
+   ```
+   在上述代码中，首先使用了立即执行函数将 i 传入函数内部，这个时候值就被固定在了参数 j 上面不会改变，当下次执行 timer 这个闭包的时候，就可以使用外部函数的变量 j，从而达到目的。
+2. 第二种就是使用 setTimeout 的第三个参数，这个参数会被当成 timer 函数的参数传入
+   ```javascript
+   for (var i = 1; i <= 5; i++) {
+     setTimeout(
+       function timer(j) {
+         console.log(j)
+       },
+       i * 1000,
+       i
+     )
+   }
+   ```
+3. 第三种就是使用 let 定义 i 了来解决问题了，这个也是最为推荐的方式
+   ```javascript
+   for (let i = 1; i <= 5; i++) {
+     setTimeout(function timer() {
+       console.log(i)
+     }, i * 1000)
+   }
+   ```
 
 
 
