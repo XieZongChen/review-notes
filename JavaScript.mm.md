@@ -1300,7 +1300,71 @@ this 是执行上下文中的一个属性，它指向最后一次调用这个方
 - apply 接受两个参数，第一个参数指定了函数体内 this 对象的指向，第二个参数为一个带下标的集合，这个集合可以为数组，也可以为类数组，apply 方法把这个集合中的元素作为参数传递给被调用的函数。
 - call 传入的参数数量不固定，跟 apply 相同的是，第一个参数也是代表函数体内的 this 指向，从第二个参数开始往后，每个参数被依次传入函数。
 
+## 实现 call、apply 及 bind 函数
 
+1. call 函数的实现
+   ```javascript
+   Function.prototype.myCall = function(context) {
+     // 判断调用对象
+     if (typeof this !== "function") {
+       console.error("type error");
+     }
+     // 获取参数
+     let args = [...arguments].slice(1),
+       result = null;
+     // 判断 context 是否传入，如果未传入则设置为 window
+     context = context || window;
+     // 将调用函数设为对象的方法
+     context.fn = this;
+     // 调用函数
+     result = context.fn(...args);
+     // 将属性删除
+     delete context.fn;
+     return result;
+   };
+   ```
+2. apply 函数的实现
+   ```javascript
+   Function.prototype.myApply = function(context) {
+     // 判断调用对象是否为函数
+     if (typeof this !== "function") {
+       throw new TypeError("Error");
+     }
+     let result = null;
+     // 判断 context 是否存在，如果未传入则为 window
+     context = context || window;
+     // 将函数设为对象的方法
+     context.fn = this;
+     // 调用方法
+     if (arguments[1]) {
+       result = context.fn(...arguments[1]);
+     } else {
+       result = context.fn();
+     }
+     // 将属性删除
+     delete context.fn;
+     return result;
+   };
+   ```
+3. bind 函数的实现
+   ```javascript
+   Function.prototype.myBind = function(context) {
+     // 判断调用对象是否为函数
+     if (typeof this !== "function") {
+       throw new TypeError("Error");
+     }
+     // 获取参数
+     var args = [...arguments].slice(1),
+       fn = this;
+     return function Fn() {
+       // 根据调用方式，传入不同绑定值
+       return fn.apply(
+         this instanceof Fn ? this : context,
+         args.concat(...arguments)
+       );
+     };
+   };
+   ```
 
 
 
