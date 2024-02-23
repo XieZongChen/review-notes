@@ -141,7 +141,92 @@ console.log(divInstance1===divInstance2); // 输出true
 
 ![image](https://github.com/XieZongChen/review-notes/assets/46394163/15e75265-8b15-4d2b-b3e5-117b5540bf5a)
 
+### 观察者模式的实现
 
+```javascript
+// 被观察者对象
+class Subject {
+
+  constructor() {
+    this.observerList = []; // 观察者列表
+  }
+
+  // 添加观察者
+  addObserver(observer) {
+    this.observerList.push(observer);
+  }
+
+  // 删除观察者
+  removeObserver(observer) {
+    const index = this.observerList.findIndex(o => o.name === observer.name);
+    this.observerList.splice(index, 1);
+  }
+
+  // 通知观察者
+  notifyObservers(message) {
+    const observers = this.observerList;
+    observers.forEach(observer => observer.notified(message));
+  }
+
+}
+
+// 观察者
+class Observer {
+
+  constructor(name, subject) {
+    this.name = name;
+    if (subject) {
+      // 如果需要观察其他对象，需要将自己添加到被观察对象的观察者列表里
+      subject.addObserver(this);
+    }
+  }
+
+  // 收到被观察者通知时的实现，函数名需要与被观察者约定好
+  notified(message) {
+    console.log(this.name, 'got message', message);
+  }
+
+}
+
+// 使用
+function main() {
+  const subject = new Subject();
+  const observerA = new Observer('observerA', subject);
+  const observerB = new Observer('observerB', subject);
+  subject.notifyObservers(`Hello from subject at ${new Date()}`);
+  console.log('------------------------')
+
+  setTimeout(() => {
+    const observerC = new Observer('observerC');
+    const observerD = new Observer('observerD');
+    subject.addObserver(observerC);
+    subject.addObserver(observerD);
+    subject.notifyObservers(`Hello from subject at ${new Date()}`);
+    console.log('------------------------')
+  }, 1000)
+
+  setTimeout(() => {
+    subject.removeObserver(observerA);
+    subject.notifyObservers(`Hello from subject at ${new Date()}`);
+    console.log('------------------------')
+  }, 2000)
+}
+
+main();
+
+// observerA got message Hello from subject at Fri Jun 25 2021 16:25:09 GMT+0800 (GMT+08:00)
+// observerB got message Hello from subject at Fri Jun 25 2021 16:25:09 GMT+0800 (GMT+08:00)
+// ------------------------
+// observerA got message Hello from subject at Fri Jun 25 2021 16:25:10 GMT+0800 (GMT+08:00)
+// observerB got message Hello from subject at Fri Jun 25 2021 16:25:10 GMT+0800 (GMT+08:00)
+// observerC got message Hello from subject at Fri Jun 25 2021 16:25:10 GMT+0800 (GMT+08:00)
+// observerD got message Hello from subject at Fri Jun 25 2021 16:25:10 GMT+0800 (GMT+08:00)
+// ------------------------
+// observerB got message Hello from subject at Fri Jun 25 2021 16:25:11 GMT+0800 (GMT+08:00)
+// observerC got message Hello from subject at Fri Jun 25 2021 16:25:11 GMT+0800 (GMT+08:00)
+// observerD got message Hello from subject at Fri Jun 25 2021 16:25:11 GMT+0800 (GMT+08:00)
+// ------------------------
+```
 
 
 
