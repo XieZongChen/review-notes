@@ -123,6 +123,25 @@ var divInstance2 = new ProxyCreateDiv('www');
 console.log(divInstance1===divInstance2); // 输出true
 ```
 
+## 观察者模式和发布订阅模式
+
+这两个模式对比复习会比较好。
+
+从表面上看：
+- 观察者模式里，只有两个角色 —— 观察者 + 被观察者
+- 发布订阅模式里，不仅仅只有发布者和订阅者两个角色，还有一个经常被我们忽略的 —— 经纪人 Broker
+
+往更深层次讲：
+- 观察者和被观察者，是松耦合的关系
+- 发布者和订阅者，则完全不存在耦合
+
+从使用层面上讲：
+- 观察者模式，多用于单个应用内部
+- 发布订阅模式，则更多的是一种跨应用的模式(cross-application pattern)，比如我们常用的消息中间件
+
+![image](https://github.com/XieZongChen/review-notes/assets/46394163/15e75265-8b15-4d2b-b3e5-117b5540bf5a)
+
+
 
 
 
