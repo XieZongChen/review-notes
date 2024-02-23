@@ -228,6 +228,106 @@ main();
 // ------------------------
 ```
 
+### 发布订阅模式的实现
+
+```javascript
+// 发布订阅中心
+class Broker {
+  constructor() {
+    this.messages = {}; // 消息列表，是一个对象数组，key 为消息类型，value 为当前类型的消息列表
+    this.listeners = {}; // 订阅者列表，是一个对象数组，key 为消息类型，value 为订阅当前类型的订阅者列表
+  }
+
+  // 发布消息
+  publish(type, content) {
+    const existContent = this.messages[type];
+    if (!existContent) {
+      this.messages[type] = [];
+    }
+    this.messages[type].push(content);
+  }
+
+  // 订阅消息
+  subscribe(type, cb) {
+    const existListener = this.listeners[type];
+    if (!existListener) {
+      this.listeners[type] = [];
+    }
+    this.listeners[type].push(cb);
+  }
+
+  // 通知消息
+  notify(type) {
+    const messages = this.messages[type];
+    const subscribers = this.listeners[type] || [];
+    // 这里可以将当前类型的整个消息列表传入，让订阅者自行处理
+    subscribers.forEach((cb) => cb(messages));
+  }
+}
+
+// 发布者
+class Publisher {
+  constructor(name, context) {
+    this.name = name;
+    this.context = context;
+  }
+
+  publish(type, content) {
+    this.context.publish(type, content);
+  }
+}
+
+// 订阅者
+class Subscriber {
+  constructor(name, context) {
+    this.name = name;
+    this.context = context;
+  }
+
+  subscribe(type, cb) {
+    this.context.subscribe(type, cb);
+  }
+}
+
+function main() {
+  const TYPE_A = 'music';
+  const TYPE_B = 'movie';
+  const TYPE_C = 'novel';
+
+  const broker = new Broker();
+
+  const publisherA = new Publisher('publisherA', broker);
+  publisherA.publish(TYPE_A, 'we are young');
+  publisherA.publish(TYPE_B, 'the silicon valley');
+  const publisherB = new Publisher('publisherB', broker);
+  publisherB.publish(TYPE_A, 'stronger');
+  const publisherC = new Publisher('publisherC', broker);
+  publisherC.publish(TYPE_B, 'imitation game');
+
+  const subscriberA = new Subscriber('subscriberA', broker);
+  subscriberA.subscribe(TYPE_A, (res) => {
+    console.log('subscriberA received', res);
+  });
+  const subscriberB = new Subscriber('subscriberB', broker);
+  subscriberB.subscribe(TYPE_C, (res) => {
+    console.log('subscriberB received', res);
+  });
+  const subscriberC = new Subscriber('subscriberC', broker);
+  subscriberC.subscribe(TYPE_B, (res) => {
+    console.log('subscriberC received', res);
+  });
+
+  broker.notify(TYPE_A);
+  broker.notify(TYPE_B);
+  broker.notify(TYPE_C);
+}
+
+main();
+
+// subscriberA received [ 'we are young', 'stronger' ]
+// subscriberC received [ 'the silicon valley', 'imitation game' ]
+// subscriberB received undefined
+```
 
 
 
