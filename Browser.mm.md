@@ -201,6 +201,17 @@ GPU 操作是运行在 GPU 进程中的，如果栅格化操作使用了 GPU，�
 
 一段 JavaScript 代码在执行之前需要被 JavaScript 引擎编译，编译完成之后，才会进入执行阶段。
 
+#### 1. 编译阶段
+
+![image](https://github.com/XieZongChen/review-notes/assets/46394163/1624fb09-a2a9-41d3-a19b-313fe439c4ab)
+
+输入一段代码，经过编译后，会生成两部分内容：执行上下文（Execution context）和可执行代码。
+
+执行上下文是 JavaScript 执行一段代码时的运行环境，比如调用一个函数，就会进入这个函数的执行上下文，确定该函数在执行期间用到的诸如 this、变量、对象以及函数等。
+
+执行上下文中存在一个 **变量环境** 的对象（Viriable Environment），该对象中保存了变量提升的内容，比如上面代码中的变量 myname 和函数 showName，都保存在该对象中。
+
+#### 2. 执行阶段
 
 
 ## 调用栈
