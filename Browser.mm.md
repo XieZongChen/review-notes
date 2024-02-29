@@ -324,7 +324,42 @@ JavaScript 存在变量提升这种特性，从而导致了很多与直觉不符
 
 **词法作用域是代码阶段就决定好的，和函数是怎么调用的没有关系**
 
+### 练习——块级作用域中的变量查找
 
+在编写代码的时候，如果你使用了一个在当前作用域中不存在的变量，这时 JavaScript 引擎就需要按照作用域链在其他作用域中查找该变量，如果你不了解该过程，那就会有很大概率写出不稳定的代码。
+
+分析一下下面代码：
+
+```javascript
+function bar() {
+    var myName = " 极客世界 "
+    let test1 = 100
+    if (1) {
+        let myName = "Chrome 浏览器 "
+        console.log(test)
+    }
+}
+function foo() {
+    var myName = " 极客邦 "
+    let test = 2
+    {
+        let test = 3
+        bar()
+    }
+}
+var myName = " 极客时间 "
+let myAge = 10
+let test = 1
+foo()
+```
+
+ES6 是支持块级作用域的，当执行到代码块时，如果代码块中有 let 或者 const 声明的变量，那么变量就会存放到该函数的词法环境中。对于上面这段代码，当执行到 bar 函数内部的 if 语句块时，其调用栈的情况如下图所示：
+
+![image](https://github.com/XieZongChen/review-notes/assets/46394163/3633147e-5ec6-49ed-ac38-a7a08fca090b)
+
+现在是执行到 bar 函数的 if 语块之内，需要打印出来变量 test，那么就需要查找到 test 变量的值，其查找过程在图中使用序号 1、2、3、4、5 标记出来了。
+
+首先是在 bar 函数的执行上下文中查找，但因为 bar 函数的执行上下文中没有定义 test 变量，所以根据词法作用域的规则，下一步就在 bar 函数的外部作用域中查找，也就是全局作用域。
 
 
 
