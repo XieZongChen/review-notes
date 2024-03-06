@@ -198,6 +198,7 @@ CSS3 中的盒模型有两种：标准盒子模型、IE 盒子模型
 可以通过修改元素的 box-sizing 属性来改变元素的盒模型：
 - box-sizeing: content-box 表示标准盒模型（默认值）
 - box-sizeing: border-box 表示 IE 盒模型（怪异盒模型）
+- box-sizeing: inherit 表示从父元素继承 box-sizing 属性的值
 
 ## 为什么有时候用 translate 来改变位置而不是定位
 
