@@ -329,9 +329,57 @@ main();
 // subscriberB received undefined
 ```
 
+## 访问者模式（Visitor）
 
+访问者模式是将对数据的操作和数据结构进行分离，将对数据中各元素的操作封装成独立的类，使其在不改变数据结构的前提下可以拓展对数据新的操作。
 
+```javascript
+// 元素类
+class Student {
+    constructor(name, chinese, math, english) {
+        this.name = name
+        this.chinese = chinese
+        this.math = math
+        this.english = english
+    }
 
+    accept(visitor) {
+        visitor.visit(this)
+    }
+}
+
+// 访问者类
+class ChineseTeacher {
+    visit(student) {
+        console.log(`语文${student.chinese}`)
+    }
+}
+
+class MathTeacher {
+    visit(student) {
+        console.log(`数学${student.math}`)
+    }
+}
+
+class EnglishTeacher {
+    visit(student) {
+        console.log(`英语${student.english}`)
+    }
+}
+
+// 实例化元素类
+const student = new Student('张三', 90, 80, 60)
+
+// 实例化访问者类
+const chineseTeacher = new ChineseTeacher()
+const mathTeacher = new MathTeacher()
+const englishTeacher = new EnglishTeacher()
+
+// 接受访问
+student.accept(chineseTeacher)
+student.accept(mathTeacher)
+student.accept(englishTeacher)
+```
 
 
 
