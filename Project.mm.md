@@ -10,7 +10,7 @@ Babel 工作流程：
 1. Parse：这个阶段的目的是将代码字符串转换成机器能读懂的 AST，这个过程分为词法分析和语法分析
    - 词法分析是通过扫描器（Scanner）将代码语句按照一定的规则将其拆分成一个个词（token）
    - 预发分析是将词法分析中得到的所有 token 组装成 AST 的过程。之后的流程都是对 AST 进行操作的。
-2. Transform：这个阶段 Babel 会递归遍历整个 AST 树，遍历过程中不同 AST 节点会调用对应的节点处理函数来处理。Babel 使用了访问者模式将 AST 节点和节点处理函数分离，用户定义的处理函数中会接收到 path 和 state 两个形参。
+2. Transform：这个阶段 Babel 会递归遍历整个 AST 树，遍历过程中不同 AST 节点会调用对应的节点处理函数来处理。Babel 使用了 [访问者模式](https://github.com/XieZongChen/review-notes/blob/main/DesignPattern.mm.md#%E8%AE%BF%E9%97%AE%E8%80%85%E6%A8%A1%E5%BC%8Fvisitor) 将 AST 节点和节点处理函数分离，用户定义的处理函数中会接收到 path 和 state 两个形参。
    - path：AST 通常会有许多节点，Path 是表示两个节点之间连接的对象。path 中不止有 parent、node、key、scope 等信息，还会有一些处理方法——`traverse(visitor, state)` 遍历当前节点的子节点
    - state: 是遍历过程中 AST 节点之间传递数据的方式。可以在遍历的过程中在 state 中存一些状态信息，用于后续的 AST 处理。
 4. Generate：这个阶段 Babel 会将 AST 转化为生成代码。转化过程中可以选择是否生成 sourcemap，sourcemap 可以将生成代码关联到源代码。一般使用 sourcemap 的目的有两个
