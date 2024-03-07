@@ -4,7 +4,18 @@
 
 ### 基本知识
 
+Babel 是一个 JavaScript 的转译器（transcompiler），用于将包含有高级语言特性的 JavaScript 代码，比如 ES9，转换为标准的 ES5 代码。
 
+Babel 工作流程：
+1. Parse：这个阶段的目的是将代码字符串转换成机器能读懂的 AST，这个过程分为词法分析和语法分析
+   - 词法分析是通过扫描器（Scanner）将代码语句按照一定的规则将其拆分成一个个词（token）
+   - 预发分析是将词法分析中得到的所有 token 组装成 AST 的过程。之后的流程都是对 AST 进行操作的。
+2. Transform：这个阶段 Babel 会递归遍历整个 AST 树，遍历过程中不同 AST 节点会调用对应的节点处理函数来处理。Babel 使用了访问者模式将 AST 节点和节点处理函数分离，用户定义的处理函数中会接收到 path 和 state 两个形参。
+   - path：AST 通常会有许多节点，Path 是表示两个节点之间连接的对象。path 中不止有 parent、node、key、scope 等信息，还会有一些处理方法——`traverse(visitor, state)` 遍历当前节点的子节点
+   - state: 是遍历过程中 AST 节点之间传递数据的方式。可以在遍历的过程中在 state 中存一些状态信息，用于后续的 AST 处理。
+4. Generate：这个阶段 Babel 会将 AST 转化为生成代码。转化过程中可以选择是否生成 sourcemap，sourcemap 可以将生成代码关联到源代码。一般使用 sourcemap 的目的有两个
+   - 调试代码时定位到源码：生成的 sourcemap 一般作为有特殊标记的注释放在文件末尾，调试工具都会支持解析这个注释，以方便调试时定位到源代码。
+   - 线上报错定位到源码：一般不会将 sourcemap 上传到生产环境，而是单独上传到错误收集平台，比如 sentry 就提供了一个插件支持在打包完成后把 sourcemap 自动上传到 sentry 的后台，然后本地 sourcemap 删掉。
 
 ### plugin 和 Preset
 
