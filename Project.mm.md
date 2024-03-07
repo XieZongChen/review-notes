@@ -2,11 +2,18 @@
 
 ## Babel
 
+### 基本知识
+
 
 
 ### plugin 和 Preset
 
 所谓 Preset 就是一些 Plugin 组成的合集，可以将 Preset 理解为就是一些 Plugin 整合成的一个包。
+
+这里需要注意的是 plugins 和 presets 顺序，总结如下：
+1. 先执行完所有 Plugin，再执行 Preset
+2. 多个 plugin，按照声明次序执行
+3. 多个 preset，按照声明次序逆序执行
 
 常见 Preset：
 - `@babel/preset-env` 这个预设可以将高版本 JavaScript 代码根据内置的规则转译成为低版本的 JavaScript 代码。`@babel/preset-env` 仅仅针对语法阶段的转译，比如转译箭头函数、const/let 语法。针对一些 Api 或者 Es6 内置模块的 polyfill 是无法进行转译的。`@babel/preset-env` 不会包含任何低于 Stage 3 的 JavaScript 语法提案。如果需要兼容低于 Stage 3 阶段的语法则需要额外引入对应的 Plugin 进行兼容。
