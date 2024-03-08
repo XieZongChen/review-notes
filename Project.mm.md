@@ -84,7 +84,7 @@ Webpack 的运行流程是一个串行的过程，从启动到结束会依次执
 - Loader 在 module.rules 中配置，作为模块的解析规则，类型为数组。每一项都是一个 Object，内部包含了 test(类型文件)、loader、options (参数)等属性。
 - Plugin 在 plugins 中单独配置，类型为数组，每一项是一个 Plugin 的实例，参数都通过构造函数传入。
 
-### 常见 Loader 和 plugin
+### 常见 Loader、plugin
 
 Loader
 - file-loader：把文件输出到一个文件夹中，在代码中通过相对 URL 去引用输出的文件 (处理图片和字体)
@@ -101,12 +101,29 @@ Loader
 - tslint-loader：通过 TSLint检查 TypeScript 代码
 - cache-loader: 可以在一些性能开销较大的 Loader 之前添加，目的是将结果缓存到磁盘里 
 
-Plugin:
+Plugin
 - uglifyjs-webpack-plugin：不支持 ES6 压缩 (Webpack4 以前)
 - terser-webpack-plugin: 支持压缩 ES6 (Webpack4)
 - webpack-parallel-uglify-plugin: 多进程执行代码压缩，提升构建速度
+- speed-measure-webpack-plugin：简称 SMP，分析出 Webpack 打包过程中 Loader 和 Plugin 的耗时，有助于找到构建过程中的性能瓶颈。
+- size-plugin：监控资源体积变化，尽早发现问题 
 
+其他
+- webpack-dashboard：可以更友好的展示相关打包信息。
+- webpack-merge：提取公共配置，减少重复配置代码
 
+### sourcemap 是什么？生产环境怎么用？
+
+sourcemap 是将编译、打包、压缩后的代码映射回源代码的过程。打包压缩后的代码不具备良好的可读性，想要调试源码就需要 soucremap。
+
+map 文件只要不打开开发者工具，浏览器是不会加载的。
+
+线上环境一般有三种处理方案：
+- hidden-source-map：借助第三方错误监控平台 Sentry 使用
+- nosources-source-map：只会显示具体行数以及查看源代码的错误栈。安全性比 sourcemap 高
+- sourcemap：通过 nginx 设置将 `.map` 文件只对白名单开放(公司内网) 
+
+注意：避免在生产中使用 `inline-` 和 `eval-` devtool 配置选项，因为它们会增加 bundle 体积大小，并降低整体性能。一般推荐使用诸如 source-map 或 hidden-source-map 这样的 devtool 选项，这些选项可以生成单独的 source map 文件，而不会增加 bundle 文件的大小。
 
 
 
