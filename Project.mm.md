@@ -166,6 +166,14 @@ Webpack 的热更新又称热替换（Hot Module Replacement），缩写为 HMR�
    4. HMR Server（服务端） 将改变通知到 HMR Runtime（客户端）
    5. HMR Runtime 更新 bundle.js 中的代码
 
+### 文件指纹是什么
+
+文件指纹是打包后输出的文件名的后缀。有三种指纹：
+- Hash：和整个项目的构建相关，只要项目文件有修改，整个项目构建的 hash 值就会更改
+- Chunkhash：和 Webpack 打包的 chunk 有关，不同的 entry 会生出不同的 chunkhash
+- Contenthash：根据文件内容来定义 hash，文件内容不变，则 contenthash 不变 
+
+
 
 
 
