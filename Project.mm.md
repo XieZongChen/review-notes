@@ -153,7 +153,18 @@ Webpack 的热更新又称热替换（Hot Module Replacement），缩写为 HMR�
 7. 而第 10 步是决定 HMR 成功与否的关键步骤，在该步骤中，HotModulePlugin 将会对新旧模块进行对比，决定是否更新模块，在决定更新模块后，检查模块之间的依赖关系，更新模块的同时更新模块间的依赖引用。
 8. 最后一步，当 HMR 失败后，回退到 live reload 操作，也就是进行浏览器刷新来获取最新打包代码。
 
-
+简单来说，热更新的完整流程分为两个阶段：
+1. 启动阶段：
+   1. 在文件系统中进行编译
+   2. 通过 Webpack Compiler 进行打包
+   3. 将打包好的文件传输给 Bundle Server
+   4. 启动服务，使浏览器以 Server 的形式访问 bundle.js
+2. 文件更新阶段：
+   1. 文件系统中的内容发生变化
+   2. 通过 Webpack Compiler 进行打包
+   3. 将打包好的文件传输给 HMR Server，分析哪些代码发生了改变
+   4. HMR Server（服务端） 将改变通知到 HMR Runtime（客户端）
+   5. HMR Runtime 更新 bundle.js 中的代码
 
 
 
