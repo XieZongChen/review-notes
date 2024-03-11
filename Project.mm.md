@@ -125,6 +125,20 @@ map 文件只要不打开开发者工具，浏览器是不会加载的。
 
 注意：避免在生产中使用 `inline-` 和 `eval-` devtool 配置选项，因为它们会增加 bundle 体积大小，并降低整体性能。一般推荐使用诸如 source-map 或 hidden-source-map 这样的 devtool 选项，这些选项可以生成单独的 source map 文件，而不会增加 bundle 文件的大小。
 
+### 文件监听原理
+
+在发现源码发生变化时，自动重新构建出新的输出文件。Webpack开启监听模式，有两种方式：
+- 启动 webpack 命令时，带上 --watch 参数
+- 在配置 webpack.config.js 中设置 watch:true
+
+原理：轮询判断文件的最后编辑时间是否变化，如果某个文件发生了变化，并不会立刻告诉监听者，而是先缓存起来，等 aggregateTimeout 后再执行。
+
+缺点：每次需要手动刷新浏览器。想解决就用热更新。
+
+### 热更新原理
+
+Webpack 的热更新又称热替换（Hot Module Replacement），缩写为 HMR。 这个机制可以做到不用刷新浏览器而将新变更的模块替换掉旧的模块。
+
 
 
 
