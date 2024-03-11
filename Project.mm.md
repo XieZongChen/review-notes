@@ -173,7 +173,13 @@ Webpack 的热更新又称热替换（Hot Module Replacement），缩写为 HMR�
 - Chunkhash：和 Webpack 打包的 chunk 有关，不同的 entry 会生出不同的 chunkhash
 - Contenthash：根据文件内容来定义 hash，文件内容不变，则 contenthash 不变 
 
+### 如何保证各个 loader 按照预想方式工作
 
+可以使用 enforce 强制执行 loader 的作用顺序：
+- pre 优先处理
+- normal 正常处理（默认）
+- inline 其次处理（官方不推荐）
+- post 最后处理
 
 
 
