@@ -224,9 +224,24 @@ Webpack 的热更新又称热替换（Hot Module Replacement），缩写为 HMR�
 - 动态 Polyfill
   - 建议采用 polyfill-service 只给用户返回需要的 polyfill，社区维护。 (部分国内奇葩浏览器UA可能无法识别，但可以降级返回所需全部polyfill)
 
+### 代码分割
 
+   待补充
+   
+### 简单描述一下编写 loader 的思路
 
+Loader 支持链式调用，所以开发上需要严格遵循“单一职责”，每个 Loader 只负责自己需要负责的事情。
 
+[Loader 的 API](https://www.webpackjs.com/api/loaders/)
+
+- Loader 运行在 Node.js 中，我们可以调用任意 Node.js 自带的 API 或者安装第三方模块进行调用
+- Webpack 传给 Loader 的原内容都是 UTF-8 格式编码的字符串，当某些场景下 Loader 处理二进制文件时，需要通过 exports.raw = true 告诉 Webpack 该 Loader 是否需要二进制数据
+- 尽可能的异步化 Loader，如果计算量很小，同步也可以
+- Loader 是无状态的，我们不应该在 Loader 中保留状态
+- 使用 loader-utils 和 schema-utils 为我们提供的实用工具
+- 加载本地 Loader 方法
+  - Npm link
+  - ResolveLoader
 
 
 
