@@ -228,7 +228,7 @@ Webpack 的热更新又称热替换（Hot Module Replacement），缩写为 HMR�
 
    待补充
    
-### 简单描述一下编写 loader 的思路
+### 简单描述一下编写 Loader 的思路
 
 Loader 支持链式调用，所以开发上需要严格遵循“单一职责”，每个 Loader 只负责自己需要负责的事情。
 
@@ -243,9 +243,20 @@ Loader 支持链式调用，所以开发上需要严格遵循“单一职责”�
   - Npm link
   - ResolveLoader
 
+### 简单描述一下编写 Plugin 的思路
 
+webpack 在运行的生命周期中会广播出许多事件，Plugin 可以监听这些事件，在特定的阶段钩入想要添加的自定义功能。Webpack 的 Tapable 事件流机制保证了插件的有序性，使得整个系统扩展性良好。
 
+[Plugin 的 API](https://www.webpackjs.com/api/plugins/)
 
+- compiler 暴露了和 Webpack 整个生命周期相关的钩子
+- compilation 暴露了与模块和依赖有关的粒度更小的事件钩子
+- 插件需要在其原型上绑定 apply 方法，才能访问 compiler 实例
+- 传给每个插件的 compiler 和 compilation 对象都是同一个引用，若在一个插件中修改了它们身上的属性，会影响后面的插件
+- 找出合适的事件点去完成想要的功能
+  - emit 事件发生时，可以读取到最终输出的资源、代码块、模块及其依赖，并进行修改(emit 事件是修改 Webpack 输出资源的最后时机)
+  - watch-run 当依赖的文件发生变化时会触发
+- 异步的事件需要在插件处理完任务时调用回调函数通知 Webpack 进入下一个流程，不然会卡住
 
 
 
