@@ -511,10 +511,71 @@ console.log(person5.friends); // ["p1", "p2", "p3","jerry","lucy"]
 
 这种继承方式的缺点也很明显，**Object.create 方法实现的是浅拷贝，多个实例的引用类型属性指向相同的内存，存在篡改的可能**
 
+### 寄生式继承
 
+寄生式继承在原型式继承基础上进行优化，利用这个浅拷贝的能力再进行增强，添加一些方法
 
+```javascript
+let parent5 = {
+    name: "parent5",
+    friends: ["p1", "p2", "p3"],
+    getName: function() {
+        return this.name;
+    }
+};
 
+function clone(original) {
+    let clone = Object.create(original);
+    clone.getFriends = function() {
+        return this.friends;
+    };
+    return clone;
+}
 
+let person5 = clone(parent5);
+
+console.log(person5.getName()); // parent5
+console.log(person5.getFriends()); // ["p1", "p2", "p3"]
+```
+
+其优缺点也很明显，**Object.create 方法实现的是浅拷贝，多个实例的引用类型属性指向相同的内存，存在篡改的可能**
+
+### 寄生组合式继承
+
+寄生组合式继承，借助解决普通对象的继承问题的 Object.create 方法，在组合继承基础上进行改造，这也是所有继承方式里面相对最优的继承方式
+
+```javascript
+function clone (parent, child) {
+    // 这里改用 Object.create 就可以减少组合继承中多进行一次构造的过程
+    child.prototype = Object.create(parent.prototype);
+    child.prototype.constructor = child;
+}
+
+function Parent6() {
+    this.name = 'parent6';
+    this.play = [1, 2, 3];
+}
+Parent6.prototype.getName = function () {
+    return this.name;
+}
+function Child6() {
+    Parent6.call(this);
+    this.friends = 'child5';
+}
+
+clone(Parent6, Child6);
+
+Child6.prototype.getFriends = function () {
+    return this.friends;
+}
+
+let person6 = new Child6();
+console.log(person6); //{friends:"child5",name:"child5",play:[1,2,3],__proto__:Parent6}
+console.log(person6.getName()); // parent6
+console.log(person6.getFriends()); // child5
+```
+
+可以看到 person6 打印出来的结果，属性都得到了继承，方法也没问题
 
 
 
