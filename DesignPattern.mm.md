@@ -608,6 +608,20 @@ asuna.getName() // 成功访问到父类的方法
 
 ### 总结
 
+![image](https://github.com/XieZongChen/review-notes/assets/46394163/7a5c8238-d8ec-45d7-b727-430bfdcf1317)
+
+通过 Object.create 来划分不同的继承方式，最后的寄生式组合继承方式是通过组合继承改造之后的最优继承方式，而 extends 的语法糖和寄生组合继承的方式基本类似
+
+
+
+
+
+
+
+
+
+
+
 
 
 
