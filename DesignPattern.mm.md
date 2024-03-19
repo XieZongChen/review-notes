@@ -381,10 +381,46 @@ student.accept(mathTeacher)
 student.accept(englishTeacher)
 ```
 
+## 继承
 
+继承（inheritance）是面向对象软件技术当中的一个概念。如果一个类别 B “继承自”另一个类别 A，就把这个 B 称为“A 的子类”，而把 A 称为“B 的父类”也可以称“A 是 B 的超类”。
 
+继承可以使得子类具有父类别的各种属性和方法，从而不需要再次编写相同的代码。在子类别继承父类别的同时，可以重新定义某些属性，并重写某些方法，即覆盖父类别的原有属性和方法，使其获得与父类别不同的功能。
 
+JavaScripy 常见的继承方式：
+- 原型链继承
+- 构造函数继承（借助 call）
+- 组合继承
+- 原型式继承
+- 寄生式继承
+- 寄生组合式继承
 
+### 原型链继承
+
+原型链继承是比较常见的继承方式之一，其中涉及的构造函数、原型和实例，三者之间存在着一定的关系，即每一个构造函数都有一个原型对象，原型对象又包含一个指向构造函数的指针，而实例则包含一个原型对象的指针
+
+```javascript
+function Parent() {
+  this.name = 'parent1';
+  this.play = [1, 2, 3]
+}
+function Child() {
+  this.type = 'child2';
+}
+Child1.prototype = new Parent();
+console.log(new Child())
+```
+
+原型链继承存在潜在问题：
+
+```javascript
+var s1 = new Child2();
+var s2 = new Child2();
+s1.play.push(4);
+console.log(s1.play, s2.play); // [1,2,3,4]
+```
+
+改变 s1 的 play 属性，会发现 s2 也跟着发生变化了，这是因为 **两个实例使用的是同一个原型对象，内存空间是共享的**
 
 
 
