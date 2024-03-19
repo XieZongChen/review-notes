@@ -577,7 +577,36 @@ console.log(person6.getFriends()); // child5
 
 可以看到 person6 打印出来的结果，属性都得到了继承，方法也没问题
 
+### ES6 extends 继承
 
+在 ES6 中，针对 class 有 extends 关键字可以直接实现继承
+
+```javascript
+class Person {
+  constructor(name) {
+    this.name = name
+  }
+  // 原型方法
+  // 即 Person.prototype.getName = function() { }
+  // 下面可以简写为 getName() {...}
+  getName = function () {
+    console.log('Person:', this.name)
+  }
+}
+class Gamer extends Person {
+  constructor(name, age) {
+    // 子类中存在构造函数，则需要在使用“this”之前首先调用 super()。
+    super(name)
+    this.age = age
+  }
+}
+const asuna = new Gamer('Asuna', 20)
+asuna.getName() // 成功访问到父类的方法
+```
+
+利用babel工具进行转换，我们会发现 extends 实际采用的也是寄生组合继承方式，因此也证明了这种方式是较优的解决继承的方式
+
+### 总结
 
 
 
