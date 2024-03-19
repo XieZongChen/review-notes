@@ -422,6 +422,33 @@ console.log(s1.play, s2.play); // [1,2,3,4]
 
 改变 s1 的 play 属性，会发现 s2 也跟着发生变化了，这是因为 **两个实例使用的是同一个原型对象，内存空间是共享的**
 
+### 构造函数继承
+
+借助 call 调用 Parent 函数
+
+```javascript
+function Parent(){
+    this.name = 'parent1';
+}
+
+Parent.prototype.getName = function () {
+    return this.name;
+}
+
+function Child(){
+    Parent1.call(this);
+    this.type = 'child'
+}
+
+let child = new Child();
+console.log(child);  // 没问题
+console.log(child.getName());  // 会报错
+```
+
+可以看到，父类原型对象中一旦存在父类之前自己定义的方法，那么子类将无法继承这些方法
+
+相比原型链继承方式，**父类的引用属性不会被共享，优化了第一种继承方式的弊端，但是只能继承父类的实例属性和方法，不能继承原型属性或者方法**
+
 
 
 
