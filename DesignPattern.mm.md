@@ -480,9 +480,36 @@ console.log(s3.getName()); // 正常输出'parent3'
 console.log(s4.getName()); // 正常输出'parent3'
 ```
 
-这种方式看起来就没什么问题，原型链继承方式和构造函数继承方式的问题都解决了，但是从上面代码我们也可以看到 Parent3 执行了两次，造成了**多构造一次的性能开销**
+这种方式看起来就没什么问题，原型链继承方式和构造函数继承方式的问题都解决了，但是从上面代码我们也可以看到 Parent3 执行了两次，造成了 **多构造一次的性能开销**
 
+### 原型式继承
 
+主要借助 Object.create 方法实现普通对象的继承
+
+```javascript
+let parent4 = {
+    name: "parent4",
+    friends: ["p1", "p2", "p3"],
+    getName: function() {
+      return this.name;
+    }
+};
+
+let person4 = Object.create(parent4);
+person4.name = "tom";
+person4.friends.push("jerry");
+
+let person5 = Object.create(parent4);
+person5.friends.push("lucy");
+
+console.log(person4.name); // tom
+console.log(person4.name === person4.getName()); // true
+console.log(person5.name); // parent4
+console.log(person4.friends); // ["p1", "p2", "p3","jerry","lucy"]
+console.log(person5.friends); // ["p1", "p2", "p3","jerry","lucy"]
+```
+
+这种继承方式的缺点也很明显，**Object.create 方法实现的是浅拷贝，多个实例的引用类型属性指向相同的内存，存在篡改的可能**
 
 
 
