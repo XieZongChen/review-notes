@@ -1699,7 +1699,34 @@ printFiles()
 // will console: [] 1 2 3
 ```
 
-可以看到执行是符合预期的，但这其实不是一种正确的写法，因为这个函数forEach 后还是同步的，async 没有起到作用，假如要求在全部读取后输出所有内容，这样的写法就只会输出一个空数组，之后函数就会返回了
+可以看到执行是符合预期的，但这其实不是一种正确的写法，因为这个函数forEach 后还是同步的，async 没有起到作用，假如要求在全部读取后输出所有内容，这样的写法就只会输出一个空数组，之后函数就会返回了。
+
+在有些场合可以看见 **forEach 中的异步是并行的 这一说法，不过这种说法有一定问题，虽然他的表现是异步的，但是不能依赖这种异步带来的特性**，因为这实际上起不到异步预期的效果，就像上文中的例子，假如后续还有相关操作就会受到影响。forEach 只是对于数组中所有的元素执行回调函数，本身并没有返回值，所以想要用 await 之类的方法加以控制也不行。
+
+### map
+
+**使用 map 可以利用其特性，将 list 中的函数都转换成 promise，然后借助 Promise.all 来达到所有函数并行处理**。
+
+```javascript
+function get(i) {
+  return Promise.resolve(i)
+}
+async function printFiles () {
+  const files = [1,2,3]
+  const ans = []
+  await Promise.all(files.map(async (file) => {
+    const contents = await get(file)
+    console.log(contents)
+    ans.push(contents)
+  }))
+  console.log(ans)
+}
+printFiles()
+// will console: 1 2 3 [1, 2, 3] 
+```
+
+还有一些要注意的细节，由于 map 返回结果是一个 Promise 数组，而 await 只适用于单个，所以需要借助 Promise.all 来实现，当然配合 Promise.race 和 Promise.allSettled 等内置的静态方法也能实现对应的效果。
+
 
 # 面向对象
 
