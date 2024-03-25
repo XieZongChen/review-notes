@@ -1727,6 +1727,26 @@ printFiles()
 
 还有一些要注意的细节，由于 map 返回结果是一个 Promise 数组，而 await 只适用于单个，所以需要借助 Promise.all 来实现，当然配合 Promise.race 和 Promise.allSettled 等内置的静态方法也能实现对应的效果。
 
+### reduce
+
+**reduce 的累加器需要前一个返回的结果，所以会等待 async 执行完毕，从而达到所有函数串行执行的效果**。
+
+```javascript
+async function printFiles () {
+  const files = await getFilePaths();
+  await files.reduce(async (acc, file) => {
+    await acc;
+    const contents = await fs.readFile(file, 'utf8');
+    console.log(contents);
+  }, Promise.resolve());
+}
+```
+
+这样就能保证顺序执行，由于 reduce 每次执行都会返回一个结果作为累加器作用，我们可以利用 async 隐式返回 的 Promise，每次首先 await 等前一个执行完毕后在进行当前的工作，以保证顺序的一致。
+
+### for-of
+
+
 
 # 面向对象
 
