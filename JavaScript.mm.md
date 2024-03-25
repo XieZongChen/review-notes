@@ -1677,6 +1677,29 @@ doIt();
 - 错误处理友好，async/await 可以⽤成熟的 try/catch，Promise 的错误捕获⾮常冗余
 - 调试友好，Promise 的调试很差，由于没有代码块，你不能在⼀个返回表达式的箭头函数中设置断点，如果你在⼀个 `.then` 代码块中使⽤调试器的步进（step-over）功能，调试器并不会进⼊后续的 `.then` 代码块，因为调试器只能跟踪同步代码的每⼀步。
 
+## Async 在迭代中的使用
+
+### forEach
+
+```javascript
+function get(i) {
+  return Promise.resolve(i)
+}
+async function printFiles () {
+  const files = [1,2,3]
+  const ans = []
+  files.forEach(async (file) => {
+    const contents = await get(file)
+    console.log(contents)
+    ans.push(contents)
+  })
+  console.log(ans)
+}
+printFiles()
+// will console: [] 1 2 3
+```
+
+可以看到执行是符合预期的，但这其实不是一种正确的写法，因为这个函数forEach 后还是同步的，async 没有起到作用，假如要求在全部读取后输出所有内容，这样的写法就只会输出一个空数组，之后函数就会返回了
 
 # 面向对象
 
