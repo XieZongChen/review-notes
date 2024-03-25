@@ -1767,8 +1767,39 @@ for...in 和 for 中虽然并不使用新的 iterator 来执行，但在内部�
 
 for...in 中 [参考规范](https://tc39.es/ecma262/#sec-runtime-semantics-forinofloopevaluation)。可以看出 for...in 和 for...of 虽然在使用上有很多感知上的区别，而且社区普遍不推荐使用 for..in，但是两者在循环体的执行机制上是很像的，用的是同一个抽象方法，只是入参有些区别，最大的区别应该在循环头的处理上，for...of 会对 iterator 进行处理，有兴趣可以参考对应规范。 所以在执行 for...in 循环体时也会依赖迭代器进行执行（这里的迭代器是一种规范抽象定义，和 JS 中的具体迭代器实作不是一回事），具体细节可以参考 ForIn/OfBodyEvaluation 的 [定义](https://tc39.es/ecma262/#sec-runtime-semantics-forin-div-ofbodyevaluation-lhs-stmt-iterator-lhskind-labelset)。
 
+### for...await...of
 
+在 ES2018 中引入了新的 for-await-of 语法，对应的 [规范](https://tc39.es/ecma262/#sec-for-in-and-for-of-statements) 和当时的 [proposal](https://github.com/tc39/proposal-async-iteration)。
 
+所以上述的函数也可以改写为
+
+```javascript
+async function printFiles () {
+  const files = await getFilePaths()
+  for await (const contents of files.map(file => fs.readFile(file, 'utf8'))) {
+    console.log(contents)
+  }
+}
+```
+
+### polyfill
+
+规范阅读起来太过复杂，一个更直观的方法是参考 对应的 polyfill，例如对于 forEach，可以参考 MDN 中给出的 [polyfill](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/forEach#polyfill)
+
+polyfill 关键点在于
+
+```javascript
+while (k < len) {
+  var kValue;
+  if (k in O) {
+    kValue = O[k];
+    callback.call(T, kValue, k, O);
+  }
+  k++;
+}
+```
+
+可以看到只是执行了这一函数，所以在异步函数的情况下也会继续执行下一个，也就造成了并行的情况。不需要查阅规范也就对于这种现象有了直观的理解。
 
 # 面向对象
 
