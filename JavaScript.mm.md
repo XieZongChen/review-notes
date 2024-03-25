@@ -1746,6 +1746,22 @@ async function printFiles () {
 
 ### for-of
 
+```javascript
+async function printFiles () {
+  const files = await getFilePaths();
+
+  for (const file of files) {
+    const contents = await fs.readFile(file, 'utf8');
+    console.log(contents);
+  }
+}
+```
+
+**在 for...of 中表现出的行为是顺序执行的**，而 forEach 中却没有这种行为，这是因为两种内部实现方式不一样，forEach 上文已经提到只是对于所有的元素执行回调函数，不会等待前一个执行结果的返回，可以参考 [ES 规范](https://tc39.es/ecma262/#sec-array.prototype.foreach) 中的定义
+
+而 **在 for...of 中其实引入了迭代器机制**，具体细节可以参考 [MDN 文档](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Iterators_and_Generators)，所以 **每次都会等待当前当前执行结束后返回 next，这样 await 就能起到作用了**。
+
+### 
 
 
 # 面向对象
