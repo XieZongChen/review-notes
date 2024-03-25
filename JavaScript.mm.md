@@ -1500,6 +1500,61 @@ result.then(v=>{
 
 注意：Promise.resolve(x) 可以看作是 new Promise(resolve => resolve(x)) 的简写，可以用于快速封装字面量对象或其他对象，将其封装成 Promise 实例。
 
+## 实现 async/await
+
+async/await 的理解：
+- async 函数执行结果返回的是一个 Promise
+- async 函数就是将 Generator 函数的星号（*）替换成 async，将 yield 替换成 await
+- async/await 就是 Generator 的语法糖，其核心逻辑是迭代执行 next 函数
+
+```javascript
+// 接受一个Generator函数作为参数
+function myAsync(gen) {
+  // 返回一个函数
+  return function () {
+    // 返回一个promise
+    return new Promise((resolve, reject) => {
+      // 执行Generator函数
+      let g = gen();
+      const next = (context) => {
+        let res
+        try {
+            res = g.next(context);
+        } catch (error) {
+            reject(error)
+        }
+        if (res.done) {
+          // 这时候说明已经是完成了，需要返回结果
+          resolve(res.value);
+        } else {
+          // 继续执行next函数,传入执行结果
+          return Promise.resolve(res.value).then(val => next(val), err => next(err))
+        }
+      };
+      next();
+    });
+  };
+}
+
+//-------------- 使用 ----------------
+const getFetch = (nums) =>
+  new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(nums + 1);
+    }, 1000);
+  });
+
+function* gen() {
+  let res1 = yield getFetch(1);
+  let res2 = yield getFetch(res1);
+  let res3 = yield getFetch(res2);
+  return res3;
+}
+
+const asyncGen = myAsync(gen);
+asyncGen().then(res => {console.log(res)}); // 4
+```
+
 ## await 到底在等啥
 
 一般来说，都认为 await 是在等待一个 async 函数完成。不过按语法说明，await 等待的是一个表达式，这个表达式的计算结果是 Promise 对象或者其它值（换句话说，就是没有特殊限定）。
