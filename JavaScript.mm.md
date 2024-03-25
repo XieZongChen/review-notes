@@ -1761,7 +1761,13 @@ async function printFiles () {
 
 而 **在 for...of 中其实引入了迭代器机制**，具体细节可以参考 [MDN 文档](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Iterators_and_Generators)，所以 **每次都会等待当前当前执行结束后返回 next，这样 await 就能起到作用了**。
 
-### 
+### for 和 for-in
+
+for...in 和 for 中虽然并不使用新的 iterator 来执行，但在内部实现上其实会去等待当前执行的结果，之后再执行下一个，同样参考 [ES 规范](https://tc39.es/ecma262/#sec-forbodyevaluation) 中的描述，对于 for 中循环体的执行机制可以看到 3.b 对于当前执行求 result，3.c 通过 result 判断是否需要跳出当前循环，可以看出 await 会对 for 循环进行作用。
+
+for...in 中 [参考规范](https://tc39.es/ecma262/#sec-runtime-semantics-forinofloopevaluation)。可以看出 for...in 和 for...of 虽然在使用上有很多感知上的区别，而且社区普遍不推荐使用 for..in，但是两者在循环体的执行机制上是很像的，用的是同一个抽象方法，只是入参有些区别，最大的区别应该在循环头的处理上，for...of 会对 iterator 进行处理，有兴趣可以参考对应规范。 所以在执行 for...in 循环体时也会依赖迭代器进行执行（这里的迭代器是一种规范抽象定义，和 JS 中的具体迭代器实作不是一回事），具体细节可以参考 ForIn/OfBodyEvaluation 的 [定义](https://tc39.es/ecma262/#sec-runtime-semantics-forin-div-ofbodyevaluation-lhs-stmt-iterator-lhskind-labelset)。
+
+
 
 
 # 面向对象
