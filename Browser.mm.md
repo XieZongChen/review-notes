@@ -85,6 +85,11 @@ Chrome 经历了多次多进程的调整，目前 Chrome 进程架构如下
 
 DOM 是保存在内存中的树状结构，可以通过 JavaScript 来查询或修改其内容。
 
+HTML 解析成 DOM 树的具体过程如下：
+
+![image](https://github.com/XieZongChen/review-notes/assets/46394163/e811dca7-3b9a-4b77-acff-e23d54ff58d6)
+
+
 ### 样式计算
 
 样式计算的目的是为了计算出 DOM 节点中每个元素的具体样式，这个阶段大体可分为三步来完成：
