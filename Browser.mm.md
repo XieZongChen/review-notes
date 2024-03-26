@@ -200,6 +200,15 @@ GPU 操作是运行在 GPU 进程中的，如果栅格化操作使用了 GPU，�
 
 1s 60帧，所以每一帧分到的时间是 1000/60 ≈ 16 ms。所以我们书写代码时力求不让一帧的工作量超过 16ms。
 
+![image](https://github.com/XieZongChen/review-notes/assets/46394163/7d80a04b-3b8f-42f3-a5f0-46910909545f)
+
+上图可看到，浏览器在一帧内需要完成如下六个步骤的任务：
+1. 处理用户的交互
+2. JS 解析执行
+3. 帧开始。处理窗口尺寸变更，页面滚动等
+4. requestAnimationFrame(rAF)
+5. 布局
+6. 绘制
 
 ## JavaScript 的执行顺序
 
