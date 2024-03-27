@@ -166,7 +166,9 @@ HTTP/2 存在一些比较严重的与 TCP 协议相关的缺陷，但由于 TCP 
 
 浏览器需要向服务器去询问缓存的相关信息，进而判断是重新发起请求、下载完整的响应，还是从本地获取缓存的资源。如果服务端提示缓存资源未改动（Not Modified），资源会被重定向到浏览器缓存，这种情况下网络请求对应的状态码是 304。
 
+### Last-Modified/If-Modified-Since
 
+二者的值都是 GMT 格式的时间字符串。Last-Modified 标记最后文件修改时间，下一次请求时，请求头中会带上 If-Modified-Since，值是 Last-Modified 告诉服务器本地缓存的文件最后修改的时间。服务器根据文件的最后修改时间判断资源是否有变化，如果文件没有变更则返回 304 Not Modified，请求不会返回资源内容，浏览器直接使用本地缓存。当服务器返回 304 Not Modified 的响应时，response header 中不会再添加 Last-Modified 去更新本地缓存的 Last-Modified，因为既然资源没有变化，那么 Last-Modified 也就不会改变；如果资源有变化，就正常返回返回资源内容，新的 Last-Modified 会在 response header 返回，并在下次请求之前更新本地缓存的 Last-Modified，下次请求时，If-Modified-Since 会启用更新后的 Last-Modified。
 
 
 
