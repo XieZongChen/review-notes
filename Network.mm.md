@@ -170,8 +170,11 @@ HTTP/2 存在一些比较严重的与 TCP 协议相关的缺陷，但由于 TCP 
 
 二者的值都是 GMT 格式的时间字符串。Last-Modified 标记最后文件修改时间，下一次请求时，请求头中会带上 If-Modified-Since，值是 Last-Modified 告诉服务器本地缓存的文件最后修改的时间。服务器根据文件的最后修改时间判断资源是否有变化，如果文件没有变更则返回 304 Not Modified，请求不会返回资源内容，浏览器直接使用本地缓存。当服务器返回 304 Not Modified 的响应时，response header 中不会再添加 Last-Modified 去更新本地缓存的 Last-Modified，因为既然资源没有变化，那么 Last-Modified 也就不会改变；如果资源有变化，就正常返回返回资源内容，新的 Last-Modified 会在 response header 返回，并在下次请求之前更新本地缓存的 Last-Modified，下次请求时，If-Modified-Since 会启用更新后的 Last-Modified。
 
+### Etag/If-None-Match
 
+值都是由服务器为每一个资源生成的唯一标识串，只要资源有变化这个值就会改变。服务器根据文件本身算出一个哈希值并通过 ETag 字段返回给浏览器，接收到 If-None-Match 字段以后，服务器通过比较两者是否一致来判定文件内容是否被改变。与 Last-Modified 不一样的是，当服务器返回 304 Not Modified 的响应时，由于在服务器上 ETag 重新计算过，response header 中还会把这个 ETag 返回，即使这个 ETag 跟之前的没有变化。
 
+### 
 
 
 
