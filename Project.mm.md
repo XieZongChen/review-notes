@@ -76,6 +76,108 @@ exports 和 module.export 区别：
 - exports：对于本身来讲是一个变量（对象），它不是 module 的引用，它是 `{}` 的引用，它指向 module.exports 的 `{}` 模块。只能使用 `.` 语法向外暴露变量。
 - module.exports：module 是一个变量，指向一块内存，exports 是 module 中的一个属性，存储在内存中，然后 exports 属性指向 `{}` 模块。既可以使用 `.` 语法，也可以使用 `=` 直接赋值。
 
+### AMD 和 require.js
+
+AMD 规范采用 **异步方式加载模块**，模块的加载不影响它后面语句的运行。**所有依赖这个模块的语句，都定义在一个回调函数中，等到加载完成之后，这个回调函数才会运行**。
+
+这里介绍用 require.js 实现 AMD 规范的模块化：用 require.config() 指定引用路径等，用 definde() 定义模块，用 require() 加载模块。
+
+首先我们需要引入 require.js 文件和一个入口文件 main.js。main.js 中配置 require.config() 并规定项目中用到的基础模块。
+
+```javascript
+/** 网页中引入 require.js 及 main.js **/
+<script src="js/require.js" data-main="js/main"></script>
+
+/** main.js 入口文件/主模块 **/
+// 首先用config()指定各模块路径和引用名
+require.config({
+  baseUrl: "js/lib",
+  paths: {
+    "jquery": "jquery.min",  //实际路径为js/lib/jquery.min.js
+    "underscore": "underscore.min",
+  }
+});
+// 执行基本操作
+require(["jquery","underscore"],function($,_){
+  // some code here
+});
+```
+
+引用模块的时候，我们将模块名放在 `[]` 中作为 reqiure() 的第一参数；如果我们定义的模块本身也依赖其他模块,那就需要将它们放在 `[]` 中作为 define() 的第一参数。
+
+```javascript
+// 定义math.js模块
+define(function () {
+    var basicNum = 0;
+    var add = function (x, y) {
+        return x + y;
+    };
+    return {
+        add: add,
+        basicNum :basicNum
+    };
+});
+
+// 定义一个依赖underscore.js的模块
+define(['underscore'],function(_){
+  var classify = function(list){
+    _.countBy(list,function(num){
+      return num > 30 ? 'old' : 'young';
+    })
+  };
+  return {
+    classify :classify
+  };
+})
+
+// 引用模块，将模块放在[]内
+require(['jquery', 'math'],function($, math){
+  var sum = math.add(10,20);
+  $("#sum").html(sum);
+});
+```
+
+### CMD 和 sea.js
+
+CMD 是另一种 js 模块化方案，它与 AMD 很类似，不同点在于：**AMD 推崇依赖前置、提前执行，CMD 推崇依赖就近、延迟执行**。此规范其实是在 sea.js 推广过程中产生的。
+
+```javascript
+/** AMD 写法 **/
+define(["a", "b", "c", "d", "e", "f"], function(a, b, c, d, e, f) { 
+    // 等于在最前面声明并初始化了要用到的所有模块
+    if (false) {
+      // 即便没用到某个模块 b，但 b 还是提前执行了。**这就CMD要优化的地方**
+      b.foo()
+    } 
+});
+
+/** CMD写法 **/
+define(function(require, exports, module) {
+    var a = require('./a'); //在需要时申明
+    a.doSomething();
+    if (false) {
+        var b = require('./b');
+        b.doSomething();
+    }
+});
+
+/** sea.js **/
+// 定义模块 math.js
+define(function(require, exports, module) {
+    var $ = require('jquery.js');
+    var add = function(a,b){
+        return a+b;
+    }
+    exports.add = add;
+});
+
+// 加载模块
+seajs.use(['math.js'], function(math){
+    var sum = math.add(1+2);
+});
+```
+
+
 
 ## Babel
 
