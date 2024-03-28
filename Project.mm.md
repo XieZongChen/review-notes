@@ -39,10 +39,43 @@ function test(ele) {
 
 **ES6 的模块不是对象，import 命令会被 JavaScript 引擎静态分析，在编译时就引入模块代码，而不是在代码运行时加载，所以无法实现条件加载**。也正因为这个，使得静态分析成为可能。
 
-ES6 模块的特征：
+**ES6 模块的特征**：
 - 严格模式：ES6 的模块自动采用严格模式
 - import read-only 特性： import 的属性是只读的，不能赋值，类似于 const 的特性
 - export/import 提升： import/export 必须位于模块顶级，不能位于作用域内；其次对于模块内的 import/export 会提升到模块顶部，这是在编译阶段完成的
+
+### CommonJS
+
+NodeJS 是 CommonJS 规范的主要实践者，它有四个重要的环境变量为模块化的实现提供支持：module、exports、require、global。实际使用时，用 module.exports 定义当前模块对外输出的接口（不推荐直接用exports），用 require 加载模块。
+
+```javascript
+// 定义模块math.js
+var total = 10;
+function add(a, b) {
+  return a + b;
+}
+// 需要向外暴露的函数、变量
+module.exports = {
+  add: add,
+  total: total
+}
+
+/** 必须加./路径，不加的话只会去 node_modules 文件找 **/
+// 引用自定义的模块时，参数包含路径，可省略.js
+var math = require('./math');
+math.add(2, 5);
+
+// 引用核心模块时，不需要带路径
+var http = require('http');
+http.createService(...).listen(3000);
+```
+
+CommonJS 用同步的方式加载模块。**在服务端，模块文件都存放在本地磁盘，读取非常快，所以这样做不会有问题。但是在浏览器端，限于网络原因，更合理的方案是使用异步加载**。
+
+exports 和 module.export 区别：
+- exports：对于本身来讲是一个变量（对象），它不是 module 的引用，它是 `{}` 的引用，它指向 module.exports 的 `{}` 模块。只能使用 `.` 语法向外暴露变量。
+- module.exports：module 是一个变量，指向一块内存，exports 是 module 中的一个属性，存储在内存中，然后 exports 属性指向 `{}` 模块。既可以使用 `.` 语法，也可以使用 `=` 直接赋值。
+
 
 ## Babel
 
