@@ -46,7 +46,7 @@ function test(ele) {
 
 ### CommonJS
 
-NodeJS 是 CommonJS 规范的主要实践者，它有四个重要的环境变量为模块化的实现提供支持：module、exports、require、global。实际使用时，用 module.exports 定义当前模块对外输出的接口（不推荐直接用exports），用 require 加载模块。
+NodeJS 是 CommonJS 规范的主要实践者，它有四个重要的环境变量为模块化的实现提供支持：module、exports、require、global。实际使用时，用 module.exports 定义当前模块对外输出的接口（不推荐直接用 exports），用 require 加载模块。
 
 ```javascript
 // 定义模块math.js
@@ -69,6 +69,8 @@ math.add(2, 5);
 var http = require('http');
 http.createService(...).listen(3000);
 ```
+
+CommonJS 模块输出的是一个值的拷贝，也就是 exports 对象，这是模块内外的唯一关联。CommonJS 输出的内容，就是 exports 对象的属性。CommonJS 模块是运行时加载，模块运行结束就确定了 exports 对象的属性。
 
 CommonJS 用同步的方式加载模块。**在服务端，模块文件都存放在本地磁盘，读取非常快，所以这样做不会有问题。但是在浏览器端，限于网络原因，更合理的方案是使用异步加载**。
 
@@ -198,6 +200,15 @@ UMD 是 AMD 和 CommonJS 的一个糅合。AMD 是浏览器优先，异步加载
   //do something...  这里是真正的函数体
 });
 ```
+
+### ES6 模块与 CommonJS 模块的差异
+
+1. **CommonJS 模块输出的是一个值的拷贝，ES6 模块输出的是值的引用**
+  - CommonJS 模块输出的是值的拷贝，也就是说，**一旦输出一个值，模块内部的变化就影响不到这个值**。
+  - ES6 模块的运行机制与 CommonJS 不一样。JS 引擎对脚本静态分析的时候，遇到模块加载命令 import，就会生成一个只读引用。等到脚本真正执行时，再根据这个只读引用，到被加载的那个模块里面去取值。换句话说，ES6 的 import 有点像 Unix 系统的“符号连接”，原始值变了，import 加载的值也会跟着变。因此，**ES6 模块是动态引用，并且不会缓存值，模块里面的变量绑定其所在的模块**。
+2. **CommonJS 模块是运行时加载，ES6 模块是编译时输出接口**
+  - 运行时加载: CommonJS 模块就是对象；即在输入时是先加载整个模块，生成一个对象，然后再从这个对象上面读取方法，这种加载称为“运行时加载”。
+  - 编译时加载: ES6 模块不是对象，而是通过 export 命令显式指定输出的代码，import 时采用静态命令的形式。即在 import 时可以指定加载某个输出值，而不是加载整个模块，这种加载称为“编译时加载”。模块内部引用的变化，会反应在外部。
 
 ## Babel
 
