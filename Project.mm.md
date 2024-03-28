@@ -177,7 +177,27 @@ seajs.use(['math.js'], function(math){
 });
 ```
 
+### UMD（Universal Module Definition - 通用模块定义）
 
+UMD 是 AMD 和 CommonJS 的一个糅合。AMD 是浏览器优先，异步加载；CommonJS 是服务器优先，同步加载。UMD 先判断是否支持 node.js 的模块，存在就使用 node.js；再判断是否支持 AMD（define是否存在），存在则使用 AMD 的方式加载。
+
+```javascript
+((root, factory) => {
+  if (typeof define === 'function' && define.amd) {
+    //AMD
+    define(['jquery'], factory);
+  } else if (typeof exports === 'object') {
+    //CommonJS
+    var $ = requie('jquery');
+    module.exports = factory($);
+  } else {
+    //都不是，浏览器全局定义
+    root.testModule = factory(root.jQuery);
+  }
+})(this, ($) => {
+  //do something...  这里是真正的函数体
+});
+```
 
 ## Babel
 
