@@ -4,7 +4,45 @@
 
 模块化的开发方式可以提供代码复用率，方便进行代码的管理。通常来说，**一个文件就是一个模块，有自己的作用域，只向外暴露特定的变量和函数**。目前流行的 js 模块化规范有 CommonJS、AMD、CMD、UMD 以及 ES6 的模块系统。
 
-### 
+### ES6 Module
+
+ES6 在语言标准的层面上，实现了模块功能，而且实现得相当简单，旨在成为浏览器和服务器通用的模块解决方案。其模块功能主要由两个命令构成：export 和 import。export 命令用于规定模块的对外接口，import 命令用于输入其他模块提供的功能。
+
+```javascript
+/** 定义模块 math.js **/
+var total = 0;
+var add = function (a, b) {
+    return a + b;
+};
+export { total, add };
+
+/** 引用模块 **/
+import { total, add } from './math';
+function test(ele) {
+    ele.textContent = add(99 + total);
+}
+```
+
+使用 import 命令的时候，用户需要知道所要加载的变量名或函数名。ES6 还提供了 export default 命令，为模块指定默认输出，对应的 import 语句不需要使用大括号。
+
+```javascript
+/** export default **/
+//定义输出
+export default { basicNum, add };
+
+//引入
+import math from './math';
+function test(ele) {
+    ele.textContent = math.add(99 + math.basicNum);
+}
+```
+
+**ES6 的模块不是对象，import 命令会被 JavaScript 引擎静态分析，在编译时就引入模块代码，而不是在代码运行时加载，所以无法实现条件加载**。也正因为这个，使得静态分析成为可能。
+
+ES6 模块的特征：
+- 严格模式：ES6 的模块自动采用严格模式
+- import read-only 特性： import 的属性是只读的，不能赋值，类似于 const 的特性
+- export/import 提升： import/export 必须位于模块顶级，不能位于作用域内；其次对于模块内的 import/export 会提升到模块顶部，这是在编译阶段完成的
 
 ## Babel
 
