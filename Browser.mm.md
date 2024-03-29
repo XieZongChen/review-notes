@@ -527,10 +527,28 @@ server.listen('3000');
 }
 ```
 
+#### CORS 跨域资源共享
 
+通过设置响应头处理的，需要后台配合处理。如果只是普通跨域请求，前端无需设置。
 
+特点：客户端发送(ajax fetch)请求，后台设置请求头相关信息，允许哪些源请求数据，需要处理 options 试探性请求。
 
+后台设置 Access-Control-Allow-Origin，如：
 
+```javascript
+/* 允许所有域名访问 */
+response.setHeader("Access-Control-Allow-Origin","*");
+
+/* 只允许某个域名访问 */
+header("Access-Control-Allow-Origin: www.xxx.xom");
+```
+
+如果需要带cookie请求，前端也需要设置字段。如：
+
+```javascript
+// 前端设置是否带cookie
+xhr.withCredentials = true;
+```
 
 
 
