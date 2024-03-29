@@ -484,8 +484,48 @@ requestAnimationFrame 方法不同与 setTimeout 或 setInterval，它是 **由�
 8. iframe + window.name
 9. iframe + location.hash
 
+### 具体跨域方案
 
+#### JSONP
 
+script、img、link、iframe 标签可以引入任意域名下的资源，不存在跨域问题。因此我们利用 script 的特点，创建一个带网址的跨域通信。
+
+JSONP 的缺点：只允许处理 get 请求，由于请求的数据都暴露在url中，容易被劫持，安全性很差，所以不推荐使用。
+
+![image](https://github.com/XieZongChen/review-notes/assets/46394163/d1f7d4c3-e054-46d3-8b11-a819565912ef)
+
+```javascript
+// 客户端实现 ---------------
+// 注意：函数声明放前边
+<script>
+ function back(res){
+  console.log(res) //返回数据
+ }
+</script>
+<script src="http://127.0.0.1:3000/login?user='111'&callback=back"></script>
+
+// 服务端实现（node） ---------------
+var querystring = require('querystring');
+var http = require('http');
+var server = http.createServer();
+server.on('request', function(req, res) {
+  console.log(req.url.split)
+    var params = querystring.parse(req.url.split('?')[1]);
+    console.log('params',params)
+    var fn = params.callback;
+    // jsonp返回设置
+    res.writeHead(200, { 'Content-Type': 'text/javascript' });
+    res.write(fn + '(' + JSON.stringify(params) + ')');
+    res.end();
+});
+server.listen('3000');
+
+// 执行成功后客户端打印 ---------------
+{
+ callback: "back"
+ user: "'111'"
+}
+```
 
 
 
