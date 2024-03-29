@@ -461,6 +461,28 @@ requestAnimationFrame 方法不同与 setTimeout 或 setInterval，它是 **由�
 
 浏览器引入了跨文档消息机制，可以通过 window.postMessage 的 JavaScript 接口来和不同源的 DOM 进行通信。
 
+## 跨域
+
+协议 + 域名 + 端口号，三者都相同时就是同源，只要有一个不同就是跨域。
+
+为了提升开发速度，方便项目维护，开发通常采用前后端分离的方式，此方式把服务器拆分成三部分：
+- Web 服务器：存放静态资源
+- 后台服务器：提供业务逻辑和数据分析。
+- 图片服务器
+三者之间的通讯就出现跨域问题了。
+
+### 跨域解决方案
+
+跨域解决方案总共有 9 种，它们分别为：
+1. 通过 JSONP 跨域
+2. CORS 跨域资源共享
+3. http proxy 代理
+4. nginx 反向代理
+5. postMessage 跨域
+6. Websocket
+7. iframe + document.domain
+8. iframe + window.name
+9. iframe + location.hash
 
 
 
