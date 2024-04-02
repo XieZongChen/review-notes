@@ -550,6 +550,30 @@ header("Access-Control-Allow-Origin: www.xxx.xom");
 xhr.withCredentials = true;
 ```
 
+#### proxy 代理
+
+因为服务器间的数据交互没有跨域限制，所以通过一个中间代理服务器请求目标服务器的数据，也就是前端服务器发送请求到代理服务器，代理服务器再请求目标服务器，将数据返回给前端服务器。
+
+现在常用的三方框架 VUE、React 项目开发环境中跨域解决方案都使用的是代理。如 config.js 代理配置如下：
+
+```javascript
+proxy: { //配置跨域
+ '/': {
+  target: 'http://www.xxxx.com/', //线上
+  changOrigin: true, //允许跨域
+  pathRewrite: {
+   '^/': ''
+  }
+ },
+}
+```
+
+
+
+
+
+
+
 
 
 
