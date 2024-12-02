@@ -593,7 +593,7 @@ SVG 适配是一种高级应用，用于实现可伸缩矢量图形在不同屏�
 
 ![image](https://github.com/user-attachments/assets/fcad0ff8-0180-4636-a0bc-78ebcf3da632)
 
-没有达到左侧对齐的预期，这个时候就需要 `preserveAspectRatio` 来解决。在 svg 元素上加上属性 `preserveAspectRatio="xMinYMin meet"`，就能得到预期。
+没有达到左侧对齐的预期，这个时候就需要 `preserveAspectRatio` 来解决。在 svg 元素上加上属性 `preserveAspectRatio="xMinYMin meet"`，就能在改变 viewBox 的情况下，保持横纵比了：[练习横纵比](https://xiezongchen.github.io/practice-graphical/svg/aspect-ratio.svg)。
 
 #### preserveAspectRatio 宽高比
 
