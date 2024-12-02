@@ -593,8 +593,26 @@ SVG 适配是一种高级应用，用于实现可伸缩矢量图形在不同屏�
 
 图
 
-没有达到左侧对齐的预期，这个时候就需要 `preserveAspectRatio` 来解决。
+没有达到左侧对齐的预期，这个时候就需要 `preserveAspectRatio` 来解决。在 svg 元素上加上属性 `preserveAspectRatio="xMinYMin meet"`，就能得到预期。
 
+#### preserveAspectRatio 宽高比
+
+默认情况下，SVG 画布的纵横比将被保留，所以会导致视口内图形被裁剪。但可以通过 [preserveAspectRatio](https://svgwg.org/svg2-draft/coords.html#PreserveAspectRatioAttribute) 属性指定不同的行为。
+
+`preserveAspectRatio` 是 SVG（可缩放矢量图形）中的属性，用于控制元素在视口中的缩放和对齐方式，以保持其纵横比。`preserveAspectRatio` 属性的值由两部分组成，用空格分隔：
+
+1. **对齐方式（Alignment）**：指定元素在视口中的对齐方式，可以是以下值之一
+   - `none`：不保持纵横比，直接拉伸元素以填充整个视口。
+   - `xMinYMin`：保持纵横比，将元素缩放到视口内并保持在左上角。
+   - `xMidYMid`：保持纵横比，将元素缩放到视口内并居中显示。
+   - `xMaxYMax`：保持纵横比，将元素缩放到视口内并保持在右下角。
+   - `xMinYMid`：保持纵横比，将元素缩放到视口内并保持在左边垂直居中。
+2. **缩放方式（Meet or Slice）**：指定元素在视口中的缩放方式，可以是以下值之一
+
+   - `meet`：缩放元素以适应视口，并保持元素完全可见，可能会留有空白区域。
+   - `slice`：缩放元素以填充视口，可能会裁剪掉部分元素。例如， preserveAspectRatio="xMidYMid meet" 表示元素将保持纵横比，缩放到视口内并在视口中居中显示，同时保持元素完全可见。
+
+preserveAspectRatio 属性通常应用于 `<svg>` 元素或 `<image>` 元素，以控制其在视口中的显示方式。它允许响应式地调整 SVG 元素，以适应不同的屏幕尺寸和显示环境。
 
 ## WebGL 绘制一个立方体
 
