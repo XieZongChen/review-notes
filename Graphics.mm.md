@@ -614,6 +614,17 @@ SVG 适配是一种高级应用，用于实现可伸缩矢量图形在不同屏�
 
 preserveAspectRatio 属性通常应用于 `<svg>` 元素或 `<image>` 元素，以控制其在视口中的显示方式。它允许响应式地调整 SVG 元素，以适应不同的屏幕尺寸和显示环境。
 
+### SVG 的动画
+
+日常开发中加载进度条时候的 icon、菜单栏各种 icon、骨架屏都可以用 SVG 的渐变和动画实现。
+
+SVG 动画的实现方式：
+
+- **SMIL**：一种 XML 语言，用于描述多媒体元素的时间和空间关系。在 SVG 中，可以使用 SMIL 动画来创建平移、旋转、缩放、颜色变化等效果。通过在元素上添加 `<animate>` 元素，设置属性的起始值和结束值，以及动画的持续时间和重复次数
+- **JavaScript**：使用 JavaScript 可以通过操作 SVG 元素的属性和样式来创建动画效果。可以使用 `requestAnimationFrame` 或 `setInterval` 函数来更新元素的属性值，从而实现平滑的动画效果
+- **CSS 动画**：与 HTML 中的 CSS 动画类似，SVG 也可以使用 CSS 来创建动画效果。通过在 SVG 元素上应用 CSS 类或样式，使用 @keyframes 规则定义动画的关键帧，然后使用 animation 属性来指定动画的名称、持续时间、重复次数等
+- **SMIL** 动画的替代方案：由于浏览器对 SMIL 动画的支持逐渐减弱，可以使用一些 JavaScript 库，如 **GreenSock Animation Platform（GSAP）**，来创建更复杂和兼容性更好的 SVG 动画
+
 ## WebGL 绘制一个立方体
 
 1. 准备 WebGL 上下文
