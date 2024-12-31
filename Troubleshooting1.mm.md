@@ -81,3 +81,17 @@
 经过 `'rehype-highlight'` => `'lowlight'` => `'highlight.js'` 路线的排查，最终发现 highlight.js 这个库中有 DOMContentLoaded 事件。
 
 ## 问题解决与总结
+
+### 问题解决
+
+当发现第三方库有问题时，最好先去 issues 列表看看有没有人提到过这个问题：
+
+![image](https://github.com/user-attachments/assets/3d791241-c1f9-4e4f-9286-6e545077f060)
+
+[具体 issue 链接](https://github.com/highlightjs/highlight.js/issues/4086)
+
+很幸运，这个问题不仅被别人提到过，而且被官方解决了，看来我们项目用的版本太旧了。
+
+而更惊喜的是，提 issue 的开发者也写了 [排查问题的博客](https://blog.imken.moe/archives/847)，我们的排查路线略有不同，看完他的排查路线，我受益匪浅。
+
+
