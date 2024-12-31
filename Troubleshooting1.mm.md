@@ -58,5 +58,10 @@
 
 为什么我不会去怀疑 system/Context 呢？因为这是运行时的上下文，EventListener 也在其中，可以将它看成很多指标的总合，怀疑它没太大的意义。
 
+3. 在开发者工具 Console 面板中使用 `getEventListeners(XXX)` api 查找有哪些监听是大量到不正常的
 
+![image](https://github.com/user-attachments/assets/e48c0eae-a720-4f4e-8a60-3079e9b4ded6)
 
+幸运的是我在 window 中就发现了大量到不正常的监听事件，不用一个一个去找其他节点上的监听。
+
+问题的根源在 DOMContentLoaded 事件的大量监听，而这个事件在我们项目代码里是没有监听的，所以开始排查代码样式相关的第三方库的源码。
