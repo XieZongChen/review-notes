@@ -34,7 +34,7 @@
 
 定位引起问题的源头，则需要用到 chrome 的开发者工具。
 
-1. 先打开开发者工具中的 Performance monitor 面板，将所有指标勾选，再次进行问题复现，观察哪些指标在复现过程中有异常
+**1. 先打开开发者工具中的 Performance monitor 面板，将所有指标勾选，再次进行问题复现，观察哪些指标在复现过程中有异常**
 
 ![image](https://github.com/user-attachments/assets/85008f7a-dff9-4380-8fae-5cac5f22ca83)
 
@@ -46,7 +46,7 @@
 
 - JS event listeners 指标在上升后，当停止一切页面操作，仅会有少量下降。当回答的代码出现时，会有很明显的飙升，且代码渲染后也得不到释放（下降）。所以确定问题在事件监听方面。
 
-2. 使用开发者工具 Memory 面板中的 Heap snapshot 功能，给复现过程做个快照
+**2. 使用开发者工具 Memory 面板中的 Heap snapshot 功能，给复现过程做个快照**
 
 ![image](https://github.com/user-attachments/assets/ecb164a7-697c-47e2-9172-c8dd6786662e)
 
@@ -58,10 +58,16 @@
 
 为什么我不会去怀疑 system/Context 呢？因为这是运行时的上下文，EventListener 也在其中，可以将它看成很多指标的总合，怀疑它没太大的意义。
 
-3. 在开发者工具 Console 面板中使用 `getEventListeners(XXX)` api 查找有哪些监听是大量到不正常的
+**3. 在开发者工具 Console 面板中使用 `getEventListeners(XXX)` api 查找有哪些监听是大量到不正常的**
 
 ![image](https://github.com/user-attachments/assets/e48c0eae-a720-4f4e-8a60-3079e9b4ded6)
 
 幸运的是我在 window 中就发现了大量到不正常的监听事件，不用一个一个去找其他节点上的监听。
 
 问题的根源在 DOMContentLoaded 事件的大量监听，而这个事件在我们项目代码里是没有监听的，所以开始排查代码样式相关的第三方库的源码。
+
+**4. 在代码样式渲染相关的第三方库里排查 DOMContentLoaded 事件的监听**
+
+在第三方库中排查问题是一个很麻烦的事，毕竟每个库都有可能大量运用其他的库，一个一个排查会很浪费时间，所以我们一定要挑重点去排查。既然是代码样式的渲染，那我们一定要顺着这方面的库去排查，且主要排查 dependencies 依赖，每个库去全局搜索 DOMContentLoaded 事件。
+
+经过 `'rehype-highlight'` => `'lowlight'` => `'highlight.js'` 路线的排查，最终发现 highlight.js 这个库中有 DOMContentLoaded 事件。
