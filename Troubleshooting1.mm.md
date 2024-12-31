@@ -30,3 +30,19 @@
 
 通过阅读新版本代码，确定并未动到 `clearTimeout` 的地方，可暂时排除此处。
 
+### 排查代码样式渲染相关代码
+
+定位引起问题的源头，则需要用到 chrome 的开发者工具。
+
+1. 先打开开发者工具中的 Performance monitor 面板，将所有指标勾选，再次进行问题复现，观察哪些指标在复现过程中有异常
+
+![image](https://github.com/user-attachments/assets/85008f7a-dff9-4380-8fae-5cac5f22ca83)
+
+![image](https://github.com/user-attachments/assets/ffa3e87a-f44d-44b5-a4c8-25212779259b)
+
+在复现过程中，我发现 DOM nodes 和 JS event listeners 两个指标都有很明显的上升。
+
+DOM nodes 指标在上升后，通过滚动页面，会发现指标有动态变化。当屏幕滚动到有代码的地方时会明显升高，其他地方会明显下降。结合代码样式渲染原理就是将代码分词后每个词生成一个 dom，确定此指标的上升在可接受范围内，问题源不在此。
+
+JS event listeners 指标在上升后，当停止一切页面操作，仅会有少量下降。当回答的代码出现时，会有很明显的飙升，且代码渲染后也得不到释放（下降）。所以确定问题在事件监听方面。
+
