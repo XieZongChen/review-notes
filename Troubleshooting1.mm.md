@@ -68,6 +68,16 @@
 
 **4. 在代码样式渲染相关的第三方库里排查 DOMContentLoaded 事件的监听**
 
-在第三方库中排查问题是一个很麻烦的事，毕竟每个库都有可能大量运用其他的库，一个一个排查会很浪费时间，所以我们一定要挑重点去排查。既然是代码样式的渲染，那我们一定要顺着这方面的库去排查，且主要排查 dependencies 依赖，每个库去全局搜索 DOMContentLoaded 事件。
+当我们展开之前在 Console 面板中打印的 DOMContentLoaded 事件监听，是可以找到其所在位置的：
+
+![image](https://github.com/user-attachments/assets/b7ffe84e-2a74-4aaf-bb9f-8cbf12c79add)
+
+注意，这只能说明在打包后，这个代码在 rehype-highlight 中。在这个项目项目打包时，我将第三方依赖单独分了 chunk，所以在 sourcemap 中会指向这个 chunk。
+
+而这个第三方库在打包时，其所依赖的 dependencies 有可能是直接打包进一个 chunk 的。所以在排查依赖包源码时，如果没有发现目标代码也不用太心急，需要顺着 dependencies 链去继续向下找。
+
+在第三方库中排查问题是一个很麻烦的事，毕竟每个库都有可能在 dependencies 中大量运用其他的库，一个一个排查会很浪费时间，所以我们一定要挑重点去排查。既然是代码样式的渲染，那我们一定要顺着这方面的库去排查，从而节省时间。
 
 经过 `'rehype-highlight'` => `'lowlight'` => `'highlight.js'` 路线的排查，最终发现 highlight.js 这个库中有 DOMContentLoaded 事件。
+
+## 问题解决与总结
