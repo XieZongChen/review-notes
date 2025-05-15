@@ -3,6 +3,7 @@
 # 复习资料
 
 - [浏览器工作原理与实践](https://blog.poetries.top/browser-working-principle/guide/part1/lesson01.html)
+- [V8引擎的垃圾回收策略](https://www.cnblogs.com/onepixel/p/7422820.html)
 
 ## 进程和线程
 
