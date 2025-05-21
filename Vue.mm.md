@@ -3,7 +3,7 @@
 ## 双向绑定
 
 双向绑定是由 DOM Listeners 和 Data Bindings 组成的。
-从 View 侧看，ViewModel 中的 DOM Listeners 工具会监测页面上 DOM 元素的变化，如果有变化，则更改Model中的数据；
+从 View 侧看，ViewModel 中的 DOM Listeners 工具会监测页面上 DOM 元素的变化，如果有变化，则更改 Model 中的数据；
 从 Model 侧看，当更新 Model 中的数据时，Data Bindings 工具会更新页面中的 DOM 元素。
 
 ## Vue 是如何实现数据双向绑定的
@@ -41,3 +41,33 @@
 如果目标是数组，直接使用数组的 splice 方法触发响应式
 
 如果目标是对象，会先判读属性是否存在、对象是否是响应式，最终如果要对属性进行响应式处理，则是通过调用 defineReactive 方法进行响应式处理（ defineReactive 方法就是 Vue 在初始化对象时，给对象属性采用 Object.defineProperty 动态添加 getter 和 setter 的功能所调用的方法）
+
+## 虚拟 DOM（virtual DOM）
+
+### 虚拟 DOM 是什么
+
+虚拟 DOM（Virtual DOM）是 Vue 框架中用于高效管理 UI 更新的核心机制，它是一个用 JavaScript 对象表示的轻量级 DOM 树结构，保存了真实 DOM 的层次、属性和子节点等信息。其核心作用是 **减少直接操作真实 DOM 的次数**，通过内存中的比对和计算，最终仅更新必要的真实 DOM 节点。
+
+### 虚拟 DOM 的实现原理
+
+1. ​ 创建虚拟 DOM​
+   - 模板编译：Vue 将模板（template）或渲染函数（render）转换为虚拟 DOM 树
+   - 渲染函数：通过 createElement 函数生成虚拟节点（VNode）
+2. Diff 算法比对
+   - 同层比较：Vue 的 Diff 算法仅比较同一层级的节点，避免跨层级遍历
+   - Key 优化：通过 key 属性标识列表项，提升节点复用效率
+   - 静态节点标记：静态节点（无动态内容）会被标记为 patchFlag: 0，跳过后续比对
+3. ​Patch 过程 ​
+   - 最小化更新：仅对差异部分（如文本内容、属性变化）进行真实 DOM 操作
+   - 批量处理：将多次 DOM 更新合并为单次任务，减少重排和重绘
+
+### 虚拟 DOM 的核心作用
+
+1. ​性能优化​
+    - 减少真实 DOM 操作次数，避免频繁的重排（Reflow）和重绘（Repaint）。
+    - 通过批量更新和静态节点优化，提升渲染效率。
+2. ​简化开发​
+    - 开发者专注于数据逻辑，无需手动管理 DOM 更新。
+    - 支持声明式编程，代码更易维护。
+3. ​跨平台能力​
+    - 虚拟 DOM 的抽象层使其可适配非浏览器环境（如 SSR、原生应用开发）
